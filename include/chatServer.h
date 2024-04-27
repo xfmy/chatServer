@@ -9,6 +9,7 @@ public:
     chatServer(int port);
     void init();
     void start();
+    void initDB();
 private:
     chatBusiness business;
     chatNetworkLayer netWork;

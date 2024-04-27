@@ -20,8 +20,8 @@ using json = nlohmann::json;
 
 #include "msgType.h"
 
-#include "db/user.h"
-#include "db/Group.hpp"
+#include "model/user.h"
+#include "model/Group.hpp"
 
 // 记录当前系统登录的用户信息
 chatdb::user g_currentUser;

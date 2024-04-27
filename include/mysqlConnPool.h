@@ -1,7 +1,7 @@
 //TODO:考虑引入连接池
 #pragma once
 
-#include "db/userModel.h"
+#include "model/userModel.h"
 #include <cppconn/driver.h>
 #include <mysql_connection.h>
 #include <mysql_driver.h>

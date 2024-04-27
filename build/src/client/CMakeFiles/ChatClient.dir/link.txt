@@ -1,0 +1,1 @@
+/usr/bin/g++ -g -rdynamic CMakeFiles/ChatClient.dir/main.cpp.o -o ../../../bin/ChatClient   -L/home/xf/projects/chatServer/chat  -L/home/xf/install/vcpkg/installed/x64-linux/debug/lib  -Wl,-rpath,/home/xf/projects/chatServer/chat:/home/xf/install/vcpkg/installed/x64-linux/debug/lib -lpthread -lmysqlcppconn 

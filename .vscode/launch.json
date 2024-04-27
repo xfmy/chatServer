@@ -1,0 +1,27 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "GDB",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "/home/xf/projects/chatServer/bin/chatServer",
+            "args": ["12345"],
+            "stopAtEntry": false,
+            "cwd": "/home/xf/projects/chatServer/bin",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            //"preLaunchTask": "g++ build active file",
+            "postDebugTask": "delete output file",
+            "miDebuggerPath": "/usr/bin/gdb"
+        }
+    ]
+}

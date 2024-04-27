@@ -1,0 +1,15 @@
+"filename", "language", "CMake", "CMake Cache", "comment", "blank", "total"
+"/home/xf/projects/chatServer/build/CMakeCache.txt", "CMake Cache", 0, 303, 0, 66, 369
+"/home/xf/projects/chatServer/build/CMakeFiles/3.22.1/CMakeCCompiler.cmake", "CMake", 55, 0, 0, 18, 73
+"/home/xf/projects/chatServer/build/CMakeFiles/3.22.1/CMakeCXXCompiler.cmake", "CMake", 64, 0, 0, 20, 84
+"/home/xf/projects/chatServer/build/CMakeFiles/3.22.1/CMakeSystem.cmake", "CMake", 10, 0, 0, 6, 16
+"/home/xf/projects/chatServer/build/CMakeFiles/CMakeDirectoryInformation.cmake", "CMake", 12, 0, 0, 5, 17
+"/home/xf/projects/chatServer/build/CMakeFiles/Makefile.cmake", "CMake", 46, 0, 0, 6, 52
+"/home/xf/projects/chatServer/build/cmake_install.cmake", "CMake", 50, 0, 0, 11, 61
+"/home/xf/projects/chatServer/build/src/CMakeFiles/CMakeDirectoryInformation.cmake", "CMake", 12, 0, 0, 5, 17
+"/home/xf/projects/chatServer/build/src/cmake_install.cmake", "CMake", 41, 0, 0, 10, 51
+"/home/xf/projects/chatServer/build/src/server/CMakeFiles/CMakeDirectoryInformation.cmake", "CMake", 12, 0, 0, 5, 17
+"/home/xf/projects/chatServer/build/src/server/CMakeFiles/chatServer.dir/DependInfo.cmake", "CMake", 21, 0, 0, 6, 27
+"/home/xf/projects/chatServer/build/src/server/CMakeFiles/chatServer.dir/cmake_clean.cmake", "CMake", 24, 0, 0, 2, 26
+"/home/xf/projects/chatServer/build/src/server/cmake_install.cmake", "CMake", 37, 0, 0, 8, 45
+"Total", "-", 384, 303, 0, 168, 855

@@ -11,8 +11,8 @@
  *	功能： 解析包的数据，
  *	返回值：0-》解析失败，其他-》buf使用大小
  ***************************************************************************************/
-// #pragma pack(push)
-// #pragma pack(1)
+#pragma pack(push)
+#pragma pack(1)
 class package
 {
 public:
@@ -38,4 +38,4 @@ public:
     // 封装之后的数据
     std::string buf;
 };
-//#pragma pack(pop)
+#pragma pack(pop)

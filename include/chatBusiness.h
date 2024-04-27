@@ -22,9 +22,9 @@ std::map<version,eventHandle>  void(baseVersion* , )
 */
 #include <functional>
 #include "muduoPublic.h"
-#include "db/userModel.h"
+#include "model/userModel.h"
 #include "baseVersion.h"
-#include "db/messageModel.h"
+#include "model/messageModel.h"
 #include "msgType.h"
 #include "networkService.h"
 #include <muduo/base/Timestamp.h>
