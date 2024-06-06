@@ -154,8 +154,8 @@ CConnectPool::CConnectPool(std::string pUrl, std::string pDB,
         std::cout << "mysql运行出错:" << e.what() << std::endl;
     }
 
-    if (!this->InitConnection())
-    {
-        std::cout << "初始化连接池出错" << std::endl;
-    }
+    // if (!this->InitConnection())
+    // {
+    //     std::cout << "初始化连接池出错" << std::endl;
+    // }
 }

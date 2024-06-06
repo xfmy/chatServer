@@ -103,12 +103,12 @@ sql::ResultSet* CMysqlDataBase::RunSqlQuery(const std::string strsql)
 
     try
     {
-        state->execute("set character set gbk;");
+        //state->execute("set character set gbk;");
         result = state->executeQuery(strsql.c_str()); //用来查询数据库信息
-        do
-        {
-            state->getResultSet();
-        } while (state->getMoreResults());
+        // do
+        // {
+        //     state->getResultSet();
+        // } while (state->getMoreResults());
         state->close();
         delete state;
     }

@@ -2,7 +2,7 @@
 chmod +x build.sh
 cmake . build
 startTime=`date +"%Y-%m-%d %H:%M:%S"`
-cmake --build build
+cmake --build build -j1
 
 endTime=`date +"%Y-%m-%d %H:%M:%S"`
 st=`date -d  "$startTime" +%s`
