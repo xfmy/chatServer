@@ -1,19 +1,17 @@
-cmake_minimum_required(VERSION  3.0)
+# 设置cmkae最小版本
+cmake_minimum_required(VERSION  3.2)
 
-project(chat)
+#定义项目名
+project(TinyIM)
 
+# 设置编译调试版本
 set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} -g)
 
+#设置c++标准
+set(CMAKE_CXX_STANDARD 17)
+
+# 指定可执行程序输出路径
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 
-include_directories(${PROJECT_SOURCE_DIR}/include)
-#include_directories(${PROJECT_SOURCE_DIR}/include/db)
- 
-#添加vcpkg目录  
-include_directories("/home/xf/install/vcpkg/installed/x64-linux/include/") 
-#link_directories(chat "/home/xf/install/vcpkg/installed/x64-linux/lib")
-link_directories(chat "/home/xf/install/vcpkg/installed/x64-linux/debug/lib")
-
+# 构建子目录
 add_subdirectory(src) 
-
- 

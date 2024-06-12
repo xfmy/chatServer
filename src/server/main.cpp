@@ -6,7 +6,7 @@
 
 */
 #include <muduo/base/Logging.h>
-#include <chatServer.h>
+#include "chatServer.h"
 int main(int argc,char** argv)
 {
     try{
@@ -15,7 +15,7 @@ int main(int argc,char** argv)
         {
             port = std::atoi(argv[1]);
         }
-        chatServer server(port);
+        ChatServer server(port);
         server.init();
         server.start();
     }

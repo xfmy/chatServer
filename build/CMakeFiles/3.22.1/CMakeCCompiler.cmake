@@ -1,4 +1,4 @@
-set(CMAKE_C_COMPILER "/usr/bin/gcc")
+set(CMAKE_C_COMPILER "/usr/bin/cc")
 set(CMAKE_C_COMPILER_ARG1 "")
 set(CMAKE_C_COMPILER_ID "GNU")
 set(CMAKE_C_COMPILER_VERSION "11.4.0")
@@ -68,5 +68,5 @@ endif()
 
 set(CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES "/home/xf/install/vcpkg/installed/x64-linux/include;/usr/lib/gcc/x86_64-linux-gnu/11/include;/usr/local/include;/usr/include/x86_64-linux-gnu;/usr/include")
 set(CMAKE_C_IMPLICIT_LINK_LIBRARIES "gcc;gcc_s;c;gcc;gcc_s")
-set(CMAKE_C_IMPLICIT_LINK_DIRECTORIES "/home/xf/install/vcpkg/installed/x64-linux/lib;/usr/lib/gcc/x86_64-linux-gnu/11;/usr/lib/x86_64-linux-gnu;/usr/lib;/lib/x86_64-linux-gnu;/lib")
+set(CMAKE_C_IMPLICIT_LINK_DIRECTORIES "/home/xf/install/vcpkg/installed/x64-linux/lib;/usr/local/lib;/usr/lib;/lib;/usr/lib/wsl/lib;/mnt/d/mysql5.7/mysql-5.7.36-winx64/lib;/mnt/d/LUA/5.1/lib;/mnt/d/mingw/mingw-w64-gcc-12.2-stable-r38/lib;/mnt/d/java.jdk/lib;/mnt/d/QT/5.15.2/msvc2019_64/lib;/mnt/d/GO/lib;/mnt/d/IntelliJ;/usr/lib/gcc/x86_64-linux-gnu/11;/usr/lib/x86_64-linux-gnu;/lib/x86_64-linux-gnu;/usr/local/sbin;/usr/local/bin;/usr/sbin;/usr/bin;/sbin;/bin;/usr/games;/usr/local/games;/mnt/d/VM/bin;/mnt/c/WINDOWS/system32;/mnt/c/WINDOWS;/mnt/c/WINDOWS/System32/Wbem;/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0;/mnt/c/WINDOWS/System32/OpenSSH;/mnt/d/mysql5.7/mysql-5.7.36-winx64/bin;/mnt/d/LUA/5.1;/mnt/d/LUA/5.1/clibs;/mnt/d/Xftp;/mnt/d/Bandizip;/mnt/d/mingw/mingw-w64-gcc-12.2-stable-r38/bin;/mnt/d/nodejs;/mnt/c/Program;/mnt/d/Visual;/mnt/d/java.jdk/bin;/mnt/d/QT/5.15.2/msvc2019_64/bin;/mnt/d/GO/bin;/mnt/d/SQLite;/mnt/c/Users/Administrator/AppData/Local/Microsoft/WindowsApps;/mnt/c/Users/Administrator/AppData/Local/GitHubDesktop/bin;/mnt/d/VSCode/bin;/mnt/c/Users/Administrator/AppData/Roaming/npm;/snap/bin")
 set(CMAKE_C_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES "")
