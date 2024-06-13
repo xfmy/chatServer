@@ -15,10 +15,6 @@ void ChatServer::init()
     netWork.setThreadNum(std::thread::hardware_concurrency());
     netWork.setBusinessMessageCallback(
         std::bind(&ChatSession::distribute, &this->session, _1, _2, _3));
-    netWork.setConnectCallback(
-        std::bind(&ChatSession::onConnectCallback, &this->session, _1));
-    netWork.setWriteCompleteCallback(
-        std::bind(&ChatSession::onConnectCallback, &this->session, _1));
 
     //初始化数据库
     initDB();

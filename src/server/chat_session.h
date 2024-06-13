@@ -29,6 +29,7 @@ std::map<version,eventHandle>  void(baseVersion* , )
 #include "model/friend_model.h"
 #include <muduo/base/Timestamp.h>
 #include <mutex>
+#include "redis_route.h"
 
 using SessionEventCallback = std::function<void(
     const NetworkService &network, const nlohmann::json &js, Timestamp time)>;
@@ -36,23 +37,14 @@ using SessionEventCallback = std::function<void(
 class ChatSession
 {
 public:
-    // void entrance(const TcpConnectionPtr &ptr, const nlohmann::json& js)
-    // override; void CallbackMessage(std::function<void(const TcpConnectionPtr
-    // &, Buffer *, Timestamp)>);
-
-    // virtual void onMessageCallback(const TcpConnectionPtr &ptr, const
-    // nlohmann::json &js, Timestamp) override;
-    // //virtual void onThreadInitCallback(EventLoop *) override;
-    void onConnectCallback(const TcpConnectionPtr &ptr);
-    void onWriteCompleteCallback(const TcpConnectionPtr &ptr);
-
-    // private:
-    // void encapsulation(const nlohmann::json &js)
     ChatSession();
+    ~ChatSession();
 
     //分发业务
     void distribute(const TcpConnectionPtr &ptr, const std::string &mes,
                     Timestamp time);
+    // 从redis消息队列中获取订阅的消息
+    void handleRedisSubscribeMessage(int userid, string msg);
 
 private:
     // bool relayMessage(const networkService &network, const nlohmann::json
@@ -82,6 +74,9 @@ private:
     void groupChat(const NetworkService &conn, const nlohmann::json &js,
                    Timestamp time);
 
+    // 处理客户端异常退出
+    void clientCloseException(const TcpConnectionPtr &conn);
+
 private:
     // 记录所有用户连接的map
     std::unordered_map<int, NetworkService> userConnectMap;
@@ -94,4 +89,6 @@ private:
     MessageModel offlineSql;
     GroupModel groupModel;
     FriendModel friendModel;
+
+    RedisRoute redisRoute;
 };

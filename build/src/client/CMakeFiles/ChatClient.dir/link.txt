@@ -1,1 +1,1 @@
-/usr/bin/c++ -g -rdynamic CMakeFiles/ChatClient.dir/chat_session.cpp.o CMakeFiles/ChatClient.dir/main.cpp.o CMakeFiles/ChatClient.dir/tcp_client.cpp.o -o ../../../bin/ChatClient  -lmuduo_net -lmuduo_base -lpthread -lmysqlcppconn 
+/usr/bin/c++ -g -g -rdynamic CMakeFiles/ChatClient.dir/chat_session.cpp.o CMakeFiles/ChatClient.dir/main.cpp.o CMakeFiles/ChatClient.dir/tcp_client.cpp.o -o ../../../bin/ChatClient  -lmuduo_net -lmuduo_base -lpthread -lmysqlcppconn 

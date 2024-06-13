@@ -1,14 +1,15 @@
+#include <muduo/base/Logging.h>
 #include "mysql_database.h"
-#include <sstream>
+//#include <sstream>
 
-//MysqlDataBase* MysqlDataBase::instance = nullptr;
+// MysqlDataBase* MysqlDataBase::instance = nullptr;
 
 MysqlDataBase::MysqlDataBase() {}
 
 MysqlDataBase::~MysqlDataBase() {}
 MysqlDataBase* MysqlDataBase::GetInstance()
 {
-    static MysqlDataBase* instance =  new MysqlDataBase();
+    static MysqlDataBase* instance = new MysqlDataBase();
     // if (nullptr == instance)
     // {
     //     instance = new MysqlDataBase();
@@ -18,17 +19,16 @@ MysqlDataBase* MysqlDataBase::GetInstance()
 
 bool MysqlDataBase::Login(int nMinPoolSize, int nMaxPoolSize)
 {
-    //std::stringstream ss;
-    //ss << "tcp://" << m_strHostIp << ":" << m_nPort << "/" << m_strDbName;
+    // std::stringstream ss;
+    // ss << "tcp://" << m_strHostIp << ":" << m_nPort << "/" << m_strDbName;
 
     std::string strUrl = url_ + "/" + strDbName_;
 
-    auto coon =
-        ConnectPool::GetInstance(strUrl, strDbName_,
-                                  strUserName_, strPwd_);
+    connPool_ =
+        ConnectPool::GetInstance(strUrl, strDbName_, strUserName_, strPwd_);
     if (!connPool_)
     {
-        std::cout << "获取连接池实例失败" << std::endl;
+        LOG_ERROR << "获取连接池实例失败";
         return false;
     }
 
@@ -51,7 +51,7 @@ bool MysqlDataBase::RunSqlExec(const std::string& strsql)
     std::shared_ptr<sql::Connection> pConn = connPool_->GetConnection();
     if (!pConn)
     {
-        std::cout << "运行时获取连接失败" << std::endl;
+        LOG_ERROR << "运行时获取连接失败" ;
         return false;
     }
     sql::Statement* state = pConn->createStatement();
@@ -77,14 +77,15 @@ bool MysqlDataBase::RunSqlExec(const std::string& strsql)
     {
         delete state;
         connPool_->ReleaseConnection(pConn);
-        std::cout << "Exec执行失败" << std::endl;
+
+        LOG_ERROR << "Exec执行失败" << e.what();
         return false;
     }
-    catch (const std::exception&)
+    catch (const std::exception& e)
     {
         delete state;
         connPool_->ReleaseConnection(pConn);
-        std::cout << "Exec执行失败" << std::endl;
+        LOG_ERROR << "Exec执行失败" <<  e.what();
         return false;
     }
     connPool_->ReleaseConnection(pConn);
@@ -96,7 +97,7 @@ sql::ResultSet* MysqlDataBase::RunSqlQuery(const std::string strsql)
     std::shared_ptr<sql::Connection> pConn = connPool_->GetConnection();
     if (!pConn)
     {
-        std::cout << "获取连接失败" << std::endl;
+        LOG_ERROR << "获取连接失败";
         return nullptr;
     }
 
@@ -114,14 +115,14 @@ sql::ResultSet* MysqlDataBase::RunSqlQuery(const std::string strsql)
     {
         delete state;
         connPool_->ReleaseConnection(pConn);
-        std::cout << "查询数据库失败:" << e.what() << std::endl;
+        LOG_ERROR << "查询数据库失败:" << e.what();
         return nullptr;
     }
     catch (const std::exception& e)
     {
         delete state;
         connPool_->ReleaseConnection(pConn);
-        std::cout << "查询数据库失败:" << e.what() << std::endl;
+        LOG_ERROR << "查询数据库失败:" << e.what();
         return nullptr;
     }
 
@@ -134,7 +135,7 @@ bool MysqlDataBase::RunSqlExecTrans(const std::vector<std::string>& vecstrsql)
     std::shared_ptr<sql::Connection> pConn = connPool_->GetConnection();
     if (!pConn)
     {
-        std::cout << "获取数据库连接失败" << std::endl;
+        LOG_ERROR << "获取数据库连接失败";
         return false;
     }
     sql::Statement* state = pConn->createStatement();
@@ -152,11 +153,11 @@ bool MysqlDataBase::RunSqlExecTrans(const std::vector<std::string>& vecstrsql)
         }
         catch (sql::SQLException& e)
         {
-            std::cout << "ExecTrans执行失败:" << e.what() << std::endl;
+            LOG_ERROR << "ExecTrans执行失败:" << e.what();
         }
         catch (const std::exception& e)
         {
-            std::cout << "ExecTrans执行失败:" << e.what() << std::endl;
+            LOG_ERROR << "ExecTrans执行失败:" << e.what();
         }
     }
     pConn->commit();
@@ -166,12 +167,13 @@ bool MysqlDataBase::RunSqlExecTrans(const std::vector<std::string>& vecstrsql)
     connPool_->ReleaseConnection(pConn);
     return true;
 }
-void MysqlDataBase::SetDbSvrInfo(std::string url_,std::string pDbName) 
+void MysqlDataBase::SetDbSvrInfo(std::string url_, std::string pDbName)
 {
     url_ = url_;
     strDbName_ = pDbName;
 }
-void MysqlDataBase::SetUserLogInfo(std::string pUserName, std::string pPwd) {
+void MysqlDataBase::SetUserLogInfo(std::string pUserName, std::string pPwd)
+{
     strUserName_ = pUserName;
     strPwd_ = pPwd;
 }

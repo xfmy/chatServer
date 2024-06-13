@@ -72,7 +72,9 @@
         "*.h++": "cpp",
         "fstream": "cpp",
         "charconv": "cpp",
-        "source_location": "cpp"
+        "source_location": "cpp",
+        "unordered_set": "cpp",
+        "shared_mutex": "cpp"
     },
     "C_Cpp.errorSquiggles": "enabled"
 }

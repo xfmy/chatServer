@@ -5,9 +5,13 @@
 
 // ConnectPool *ConnectPool::connectPool_ = nullptr;
 
-ConnectPool::ConnectPool() {}
+// ConnectPool::ConnectPool(std::string pUrl, std::string pDB,
+//                          std::string pUserName, std::string pPwd):
+//                          strUrl_(pUrl),strDB_(pDB),strUserName_(pUserName),strPwd_(pPwd)
+// {
+// }
 
-ConnectPool::~ConnectPool() {}
+//ConnectPool::~ConnectPool() {}
 
 std::shared_ptr<sql::Connection> ConnectPool::CreateConnection()
 {
@@ -43,7 +47,9 @@ std::shared_ptr<ConnectPool> ConnectPool::GetInstance(std::string pUrl,
     auto instanceSharedPtr = instanceWeakPtr.lock();
     if (!instanceSharedPtr)
     {
-        instanceSharedPtr = std::shared_ptr<ConnectPool>(new ConnectPool);
+        instanceSharedPtr = std::shared_ptr<ConnectPool>(
+            new ConnectPool(pUrl, pDB, pUserName, pPwd));
+
         instanceWeakPtr = instanceSharedPtr;
     }
     return instanceSharedPtr;

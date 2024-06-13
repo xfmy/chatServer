@@ -117,25 +117,25 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
-src/client/CMakeFiles/ChatClient.dir/rule:
-	cd /home/xf/code/chat-server/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/client/CMakeFiles/ChatClient.dir/rule
-.PHONY : src/client/CMakeFiles/ChatClient.dir/rule
+src/client/CMakeFiles/chat-client.dir/rule:
+	cd /home/xf/code/chat-server/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/client/CMakeFiles/chat-client.dir/rule
+.PHONY : src/client/CMakeFiles/chat-client.dir/rule
 
 # Convenience name for target.
-ChatClient: src/client/CMakeFiles/ChatClient.dir/rule
-.PHONY : ChatClient
+chat-client: src/client/CMakeFiles/chat-client.dir/rule
+.PHONY : chat-client
 
 # fast build rule for target.
-ChatClient/fast:
-	cd /home/xf/code/chat-server/build && $(MAKE) $(MAKESILENT) -f src/client/CMakeFiles/ChatClient.dir/build.make src/client/CMakeFiles/ChatClient.dir/build
-.PHONY : ChatClient/fast
+chat-client/fast:
+	cd /home/xf/code/chat-server/build && $(MAKE) $(MAKESILENT) -f src/client/CMakeFiles/chat-client.dir/build.make src/client/CMakeFiles/chat-client.dir/build
+.PHONY : chat-client/fast
 
 chat_session.o: chat_session.cpp.o
 .PHONY : chat_session.o
 
 # target to build an object file
 chat_session.cpp.o:
-	cd /home/xf/code/chat-server/build && $(MAKE) $(MAKESILENT) -f src/client/CMakeFiles/ChatClient.dir/build.make src/client/CMakeFiles/ChatClient.dir/chat_session.cpp.o
+	cd /home/xf/code/chat-server/build && $(MAKE) $(MAKESILENT) -f src/client/CMakeFiles/chat-client.dir/build.make src/client/CMakeFiles/chat-client.dir/chat_session.cpp.o
 .PHONY : chat_session.cpp.o
 
 chat_session.i: chat_session.cpp.i
@@ -143,7 +143,7 @@ chat_session.i: chat_session.cpp.i
 
 # target to preprocess a source file
 chat_session.cpp.i:
-	cd /home/xf/code/chat-server/build && $(MAKE) $(MAKESILENT) -f src/client/CMakeFiles/ChatClient.dir/build.make src/client/CMakeFiles/ChatClient.dir/chat_session.cpp.i
+	cd /home/xf/code/chat-server/build && $(MAKE) $(MAKESILENT) -f src/client/CMakeFiles/chat-client.dir/build.make src/client/CMakeFiles/chat-client.dir/chat_session.cpp.i
 .PHONY : chat_session.cpp.i
 
 chat_session.s: chat_session.cpp.s
@@ -151,7 +151,7 @@ chat_session.s: chat_session.cpp.s
 
 # target to generate assembly for a file
 chat_session.cpp.s:
-	cd /home/xf/code/chat-server/build && $(MAKE) $(MAKESILENT) -f src/client/CMakeFiles/ChatClient.dir/build.make src/client/CMakeFiles/ChatClient.dir/chat_session.cpp.s
+	cd /home/xf/code/chat-server/build && $(MAKE) $(MAKESILENT) -f src/client/CMakeFiles/chat-client.dir/build.make src/client/CMakeFiles/chat-client.dir/chat_session.cpp.s
 .PHONY : chat_session.cpp.s
 
 main.o: main.cpp.o
@@ -159,7 +159,7 @@ main.o: main.cpp.o
 
 # target to build an object file
 main.cpp.o:
-	cd /home/xf/code/chat-server/build && $(MAKE) $(MAKESILENT) -f src/client/CMakeFiles/ChatClient.dir/build.make src/client/CMakeFiles/ChatClient.dir/main.cpp.o
+	cd /home/xf/code/chat-server/build && $(MAKE) $(MAKESILENT) -f src/client/CMakeFiles/chat-client.dir/build.make src/client/CMakeFiles/chat-client.dir/main.cpp.o
 .PHONY : main.cpp.o
 
 main.i: main.cpp.i
@@ -167,7 +167,7 @@ main.i: main.cpp.i
 
 # target to preprocess a source file
 main.cpp.i:
-	cd /home/xf/code/chat-server/build && $(MAKE) $(MAKESILENT) -f src/client/CMakeFiles/ChatClient.dir/build.make src/client/CMakeFiles/ChatClient.dir/main.cpp.i
+	cd /home/xf/code/chat-server/build && $(MAKE) $(MAKESILENT) -f src/client/CMakeFiles/chat-client.dir/build.make src/client/CMakeFiles/chat-client.dir/main.cpp.i
 .PHONY : main.cpp.i
 
 main.s: main.cpp.s
@@ -175,7 +175,7 @@ main.s: main.cpp.s
 
 # target to generate assembly for a file
 main.cpp.s:
-	cd /home/xf/code/chat-server/build && $(MAKE) $(MAKESILENT) -f src/client/CMakeFiles/ChatClient.dir/build.make src/client/CMakeFiles/ChatClient.dir/main.cpp.s
+	cd /home/xf/code/chat-server/build && $(MAKE) $(MAKESILENT) -f src/client/CMakeFiles/chat-client.dir/build.make src/client/CMakeFiles/chat-client.dir/main.cpp.s
 .PHONY : main.cpp.s
 
 tcp_client.o: tcp_client.cpp.o
@@ -183,7 +183,7 @@ tcp_client.o: tcp_client.cpp.o
 
 # target to build an object file
 tcp_client.cpp.o:
-	cd /home/xf/code/chat-server/build && $(MAKE) $(MAKESILENT) -f src/client/CMakeFiles/ChatClient.dir/build.make src/client/CMakeFiles/ChatClient.dir/tcp_client.cpp.o
+	cd /home/xf/code/chat-server/build && $(MAKE) $(MAKESILENT) -f src/client/CMakeFiles/chat-client.dir/build.make src/client/CMakeFiles/chat-client.dir/tcp_client.cpp.o
 .PHONY : tcp_client.cpp.o
 
 tcp_client.i: tcp_client.cpp.i
@@ -191,7 +191,7 @@ tcp_client.i: tcp_client.cpp.i
 
 # target to preprocess a source file
 tcp_client.cpp.i:
-	cd /home/xf/code/chat-server/build && $(MAKE) $(MAKESILENT) -f src/client/CMakeFiles/ChatClient.dir/build.make src/client/CMakeFiles/ChatClient.dir/tcp_client.cpp.i
+	cd /home/xf/code/chat-server/build && $(MAKE) $(MAKESILENT) -f src/client/CMakeFiles/chat-client.dir/build.make src/client/CMakeFiles/chat-client.dir/tcp_client.cpp.i
 .PHONY : tcp_client.cpp.i
 
 tcp_client.s: tcp_client.cpp.s
@@ -199,7 +199,7 @@ tcp_client.s: tcp_client.cpp.s
 
 # target to generate assembly for a file
 tcp_client.cpp.s:
-	cd /home/xf/code/chat-server/build && $(MAKE) $(MAKESILENT) -f src/client/CMakeFiles/ChatClient.dir/build.make src/client/CMakeFiles/ChatClient.dir/tcp_client.cpp.s
+	cd /home/xf/code/chat-server/build && $(MAKE) $(MAKESILENT) -f src/client/CMakeFiles/chat-client.dir/build.make src/client/CMakeFiles/chat-client.dir/tcp_client.cpp.s
 .PHONY : tcp_client.cpp.s
 
 # Help Target
@@ -210,7 +210,7 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... ChatClient"
+	@echo "... chat-client"
 	@echo "... chat_session.o"
 	@echo "... chat_session.i"
 	@echo "... chat_session.s"

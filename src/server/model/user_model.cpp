@@ -9,7 +9,13 @@ bool UserModel::insert(User &user)
         "insert into user(name, password, state) values('{}', '{}', '{}')",
         user.GetName().c_str(), user.GetPassword().c_str(),
         user.GetState().c_str());
-    return MysqlDataBase::GetInstance()->RunSqlExec(sql);
+    bool res = MysqlDataBase::GetInstance()->RunSqlExec(sql);
+    if(res){
+        sql = fmt::format("select id from user where name='{}' and password='{}';",user.GetName(),user.GetPassword());
+        int id = MysqlDataBase::GetInstance()->RunSqlQuery(sql)->getInt("id");
+        user.SetId(id);
+    }
+    return res; 
 }
 void UserModel::ResetState()
 {
@@ -18,7 +24,7 @@ void UserModel::ResetState()
 }
 bool UserModel::UpdateState(User user)
 {
-    std::string sql = fmt::format("updata user set state = '{}' where id = {}",
+    std::string sql = fmt::format("update user set state = '{}' where id = {}",
                                   user.GetState().c_str(), user.GetId());
     return MysqlDataBase::GetInstance()->RunSqlExec(sql);
 }
@@ -42,6 +48,7 @@ User UserModel::query(int id)
     std::string sql = fmt::format("select * from user where id = {}", id);
     sql::ResultSet *res = MysqlDataBase::GetInstance()->RunSqlQuery(sql);
     User user;
+    res->beforeFirst();
     if (res->next())
     {
         user.SetId(res->getInt("id"));

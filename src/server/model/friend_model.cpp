@@ -22,6 +22,7 @@ std::vector<std::string> FriendModel::query(int userid)
     std::vector<std::string> vec;
     sql::ResultSet* res = MysqlDataBase::GetInstance()->RunSqlQuery(sql);
 
+    res->beforeFirst();
     while (res->next())
     {
         nlohmann::json js;

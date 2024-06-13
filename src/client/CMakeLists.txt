@@ -2,7 +2,7 @@
 aux_source_directory(. SRC_LIST)
 
 # 指定生成可执行文件
-add_executable(ChatClient ${SRC_LIST})
+add_executable(chat-client ${SRC_LIST})
 
 # 指定可执行文件链接时需要依赖的库文件
-target_link_libraries(ChatClient muduo_net muduo_base pthread mysqlcppconn)
+target_link_libraries(chat-client muduo_net muduo_base pthread mysqlcppconn)

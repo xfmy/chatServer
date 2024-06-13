@@ -5,9 +5,10 @@
 
 class ConnectPool
 {
-public:
-    ConnectPool();
-    ~ConnectPool();
+private:
+    // ConnectPool(std::string pUrl, std::string pDB, std::string pUserName,
+    //             std::string pPwd);
+    //~ConnectPool();
 
 public:
     //创建一个连接,返回一个Connection

@@ -135,14 +135,14 @@ void ChatSession::doLoginResponse(json &responsejs)
 {
     if (200 != responsejs["code"].get<int>()) // 登录失败
     {
-        cerr << responsejs["errmsg"] << endl;
+        cout << responsejs["errmsg"] << endl;
         isLoginSuccess_ = false;
     }
     else // 登录成功
     {
         // 记录当前用户的id和name
-        currentUser_.SetId(responsejs["user"]["id"].get<int>());
-        currentUser_.SetName(responsejs["user"]["name"]);
+        currentUser_.SetId(responsejs["id"].get<int>());
+        currentUser_.SetName(responsejs["name"]);
 
         // 记录当前用户的好友列表信息
         if (responsejs.contains("friends"))

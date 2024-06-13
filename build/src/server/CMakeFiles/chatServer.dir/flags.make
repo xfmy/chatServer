@@ -6,5 +6,5 @@ CXX_DEFINES =
 
 CXX_INCLUDES = -I/home/xf/code/chat-server/src/base -I/home/xf/code/chat-server/src/server/./db -I/home/xf/code/chat-server/src/server/./model
 
-CXX_FLAGS = -g
+CXX_FLAGS = -g -g
 

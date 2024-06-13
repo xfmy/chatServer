@@ -117,30 +117,30 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named chatServer
+# Target rules for targets named chat-server
 
 # Build rule for target.
-chatServer: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 chatServer
-.PHONY : chatServer
+chat-server: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 chat-server
+.PHONY : chat-server
 
 # fast build rule for target.
-chatServer/fast:
-	$(MAKE) $(MAKESILENT) -f src/server/CMakeFiles/chatServer.dir/build.make src/server/CMakeFiles/chatServer.dir/build
-.PHONY : chatServer/fast
+chat-server/fast:
+	$(MAKE) $(MAKESILENT) -f src/server/CMakeFiles/chat-server.dir/build.make src/server/CMakeFiles/chat-server.dir/build
+.PHONY : chat-server/fast
 
 #=============================================================================
-# Target rules for targets named ChatClient
+# Target rules for targets named chat-client
 
 # Build rule for target.
-ChatClient: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 ChatClient
-.PHONY : ChatClient
+chat-client: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 chat-client
+.PHONY : chat-client
 
 # fast build rule for target.
-ChatClient/fast:
-	$(MAKE) $(MAKESILENT) -f src/client/CMakeFiles/ChatClient.dir/build.make src/client/CMakeFiles/ChatClient.dir/build
-.PHONY : ChatClient/fast
+chat-client/fast:
+	$(MAKE) $(MAKESILENT) -f src/client/CMakeFiles/chat-client.dir/build.make src/client/CMakeFiles/chat-client.dir/build
+.PHONY : chat-client/fast
 
 # Help Target
 help:
@@ -150,8 +150,8 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... ChatClient"
-	@echo "... chatServer"
+	@echo "... chat-client"
+	@echo "... chat-server"
 .PHONY : help
 
 

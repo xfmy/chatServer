@@ -17,7 +17,7 @@ int main(int argc, char **argv)
     ChatSession session(argv[1], port);
 
     // main线程用于接收用户输入，负责发送数据
-    for (;;)
+    while(true)
     {
         // 显示首页面菜单 登录、注册、退出
         cout << "========================" << endl;
@@ -27,19 +27,15 @@ int main(int argc, char **argv)
         cout << "========================" << endl;
         cout << "choice:";
         int choice = 0;
-        std::string str;
-        cin >> str;
-        choice = std::atoi(str.c_str());
+        cin >> choice;
 
         switch (choice)
         {
             case 1: // login业务
             {
                 int id;
-                //std::string userName;
                 std::string password;
-                std::cout << "userName:";
-                //std::cin >> userName;
+                std::cout << "userId:";
                 std::cin >> id;
                 cout << "userpassword:";
                 std::cin >> password;
@@ -61,9 +57,11 @@ int main(int argc, char **argv)
             break;
             case 3: // quit业务
                 exit(0);
-            default: cerr << "invalid input!" << endl; break;
+                break;
+            default: 
+                cerr << "invalid input!" << endl; 
+                break;
         }
     }
-
     return 0;
 }

@@ -68,8 +68,9 @@ vector<Group> GroupModel::QueryGroups(int userid)
             user.SetRole(res->getString("grouprole"));
             group.GetUsers().push_back(user);
         }
+        res->close();
     }
-    res->close();
+    
     return groupVec;
 }
 

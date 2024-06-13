@@ -96,7 +96,7 @@ src/clean: src/client/clean
 # Directory level rules for directory src/client
 
 # Recursive "all" directory target.
-src/client/all: src/client/CMakeFiles/ChatClient.dir/all
+src/client/all: src/client/CMakeFiles/chat-client.dir/all
 .PHONY : src/client/all
 
 # Recursive "preinstall" directory target.
@@ -104,14 +104,14 @@ src/client/preinstall:
 .PHONY : src/client/preinstall
 
 # Recursive "clean" directory target.
-src/client/clean: src/client/CMakeFiles/ChatClient.dir/clean
+src/client/clean: src/client/CMakeFiles/chat-client.dir/clean
 .PHONY : src/client/clean
 
 #=============================================================================
 # Directory level rules for directory src/server
 
 # Recursive "all" directory target.
-src/server/all: src/server/CMakeFiles/chatServer.dir/all
+src/server/all: src/server/CMakeFiles/chat-server.dir/all
 .PHONY : src/server/all
 
 # Recursive "preinstall" directory target.
@@ -119,60 +119,60 @@ src/server/preinstall:
 .PHONY : src/server/preinstall
 
 # Recursive "clean" directory target.
-src/server/clean: src/server/CMakeFiles/chatServer.dir/clean
+src/server/clean: src/server/CMakeFiles/chat-server.dir/clean
 .PHONY : src/server/clean
 
 #=============================================================================
-# Target rules for target src/server/CMakeFiles/chatServer.dir
+# Target rules for target src/server/CMakeFiles/chat-server.dir
 
 # All Build rule for target.
-src/server/CMakeFiles/chatServer.dir/all:
-	$(MAKE) $(MAKESILENT) -f src/server/CMakeFiles/chatServer.dir/build.make src/server/CMakeFiles/chatServer.dir/depend
-	$(MAKE) $(MAKESILENT) -f src/server/CMakeFiles/chatServer.dir/build.make src/server/CMakeFiles/chatServer.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/xf/code/chat-server/build/CMakeFiles --progress-num=5,6,7,8,9,10,11,12,13,14,15 "Built target chatServer"
-.PHONY : src/server/CMakeFiles/chatServer.dir/all
+src/server/CMakeFiles/chat-server.dir/all:
+	$(MAKE) $(MAKESILENT) -f src/server/CMakeFiles/chat-server.dir/build.make src/server/CMakeFiles/chat-server.dir/depend
+	$(MAKE) $(MAKESILENT) -f src/server/CMakeFiles/chat-server.dir/build.make src/server/CMakeFiles/chat-server.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/xf/code/chat-server/build/CMakeFiles --progress-num=5,6,7,8,9,10,11,12,13,14,15,16 "Built target chat-server"
+.PHONY : src/server/CMakeFiles/chat-server.dir/all
 
 # Build rule for subdir invocation for target.
-src/server/CMakeFiles/chatServer.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/xf/code/chat-server/build/CMakeFiles 11
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/server/CMakeFiles/chatServer.dir/all
+src/server/CMakeFiles/chat-server.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/xf/code/chat-server/build/CMakeFiles 12
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/server/CMakeFiles/chat-server.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/xf/code/chat-server/build/CMakeFiles 0
-.PHONY : src/server/CMakeFiles/chatServer.dir/rule
+.PHONY : src/server/CMakeFiles/chat-server.dir/rule
 
 # Convenience name for target.
-chatServer: src/server/CMakeFiles/chatServer.dir/rule
-.PHONY : chatServer
+chat-server: src/server/CMakeFiles/chat-server.dir/rule
+.PHONY : chat-server
 
 # clean rule for target.
-src/server/CMakeFiles/chatServer.dir/clean:
-	$(MAKE) $(MAKESILENT) -f src/server/CMakeFiles/chatServer.dir/build.make src/server/CMakeFiles/chatServer.dir/clean
-.PHONY : src/server/CMakeFiles/chatServer.dir/clean
+src/server/CMakeFiles/chat-server.dir/clean:
+	$(MAKE) $(MAKESILENT) -f src/server/CMakeFiles/chat-server.dir/build.make src/server/CMakeFiles/chat-server.dir/clean
+.PHONY : src/server/CMakeFiles/chat-server.dir/clean
 
 #=============================================================================
-# Target rules for target src/client/CMakeFiles/ChatClient.dir
+# Target rules for target src/client/CMakeFiles/chat-client.dir
 
 # All Build rule for target.
-src/client/CMakeFiles/ChatClient.dir/all:
-	$(MAKE) $(MAKESILENT) -f src/client/CMakeFiles/ChatClient.dir/build.make src/client/CMakeFiles/ChatClient.dir/depend
-	$(MAKE) $(MAKESILENT) -f src/client/CMakeFiles/ChatClient.dir/build.make src/client/CMakeFiles/ChatClient.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/xf/code/chat-server/build/CMakeFiles --progress-num=1,2,3,4 "Built target ChatClient"
-.PHONY : src/client/CMakeFiles/ChatClient.dir/all
+src/client/CMakeFiles/chat-client.dir/all:
+	$(MAKE) $(MAKESILENT) -f src/client/CMakeFiles/chat-client.dir/build.make src/client/CMakeFiles/chat-client.dir/depend
+	$(MAKE) $(MAKESILENT) -f src/client/CMakeFiles/chat-client.dir/build.make src/client/CMakeFiles/chat-client.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/xf/code/chat-server/build/CMakeFiles --progress-num=1,2,3,4 "Built target chat-client"
+.PHONY : src/client/CMakeFiles/chat-client.dir/all
 
 # Build rule for subdir invocation for target.
-src/client/CMakeFiles/ChatClient.dir/rule: cmake_check_build_system
+src/client/CMakeFiles/chat-client.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/xf/code/chat-server/build/CMakeFiles 4
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/client/CMakeFiles/ChatClient.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/client/CMakeFiles/chat-client.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/xf/code/chat-server/build/CMakeFiles 0
-.PHONY : src/client/CMakeFiles/ChatClient.dir/rule
+.PHONY : src/client/CMakeFiles/chat-client.dir/rule
 
 # Convenience name for target.
-ChatClient: src/client/CMakeFiles/ChatClient.dir/rule
-.PHONY : ChatClient
+chat-client: src/client/CMakeFiles/chat-client.dir/rule
+.PHONY : chat-client
 
 # clean rule for target.
-src/client/CMakeFiles/ChatClient.dir/clean:
-	$(MAKE) $(MAKESILENT) -f src/client/CMakeFiles/ChatClient.dir/build.make src/client/CMakeFiles/ChatClient.dir/clean
-.PHONY : src/client/CMakeFiles/ChatClient.dir/clean
+src/client/CMakeFiles/chat-client.dir/clean:
+	$(MAKE) $(MAKESILENT) -f src/client/CMakeFiles/chat-client.dir/build.make src/client/CMakeFiles/chat-client.dir/clean
+.PHONY : src/client/CMakeFiles/chat-client.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.
