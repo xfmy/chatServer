@@ -1,4 +1,8 @@
-//网络层
+/**
+ * @file tcp_service.h
+ * @brief 封装muduo tcp server
+ * 
+ */
 #pragma once
 
 #include <muduo/net/TcpServer.h>
@@ -19,9 +23,6 @@ public:
     ~TcpService();
     void start();
     void init();
-
-    //void sendmsg(std::string msg);
-
     void setWriteCompleteCallback(const WriteCompleteCallback cb) { server.setWriteCompleteCallback(cb); }
     void setBusinessMessageCallback(const businessCallback cb) { this->businessMsgCallback = cb; }
     void setConnectCallback(const ConnectionCallback cb) { server.setConnectionCallback(cb); }
@@ -31,18 +32,11 @@ public:
 private:
      void onMessageCallback(const TcpConnectionPtr &ptr, Buffer *buf, Timestamp);
      void onThreadInitCallback(EventLoop *);
-    // void onConnectCallback(const TcpConnectionPtr &ptr);
-    // void onWriteCompleteCallback(const TcpConnectionPtr &ptr);
-
-    //void onMessageCompleteCallback(const TcpConnectionPtr &, const std::string &);
-    //设置业务层的消息处理回调函数
+    /// @brief 设置业务层的消息处理回调函数
     businessCallback businessMsgCallback;
-
 
      const std::string serverName = "char_server";
      InetAddress addr;
      EventLoop loop;
      TcpServer server;
-
-     
 };

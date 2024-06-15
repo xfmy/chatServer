@@ -9,5 +9,6 @@ public:
     std::string GetRole() { return this->role; }
 
 private:
+    /// @brief 群成员属性,分为创建者和普通群员
     std::string role;
 };

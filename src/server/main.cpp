@@ -1,12 +1,6 @@
-/*
-网络层
-|
-^
-业务层==>数据层
 
-*/
 #include <muduo/base/Logging.h>
-#include "chatServer.h"
+#include "chat_server.h"
 int main(int argc,char** argv)
 {
     try{

@@ -1,5 +1,3 @@
-#include "package.h"
-#include "tcp_service.h"
 #include <nlohmann/json.hpp>
 #include <muduo/base/TimeZone.h>
 #include <muduo/base/Logging.h>
@@ -8,6 +6,9 @@
 #include <optional>
 #include <thread>
 #include <functional>
+
+#include "package.h"
+#include "tcp_service.h"
 
 void TcpService::init()
 {
@@ -39,11 +40,6 @@ void TcpService::start()
     loop.loop();
 }
 
-// void chatNetworkLayer::onWriteCompleteCallback(const TcpConnectionPtr &ptr)
-// {
-//     LOG_INFO <<ptr->peerAddress().toIpPort() + "消息发送完毕";
-// }
-
 void TcpService::onMessageCallback(const TcpConnectionPtr &ptr, Buffer *buf,
                                    Timestamp time)
 {
@@ -63,19 +59,7 @@ void TcpService::onMessageCallback(const TcpConnectionPtr &ptr, Buffer *buf,
     businessMsgCallback(ptr, view, time);
 }
 
-// void chatNetworkLayer::onConnectCallback(const TcpConnectionPtr &ptr)
-// {
-//     if (ptr->connected()){
-//         LOG_INFO << ptr->peerAddress().toIpPort() + "客户发起来了连接";
-//     }
-//     else{
-//         LOG_INFO << ptr->peerAddress().toIpPort() + "客户断开了连接";
-//     }
-    
-// }
-
 void TcpService::onThreadInitCallback(EventLoop *)
 {
-    //TODO:都需要处理
     LOG_INFO << "work loop thread start";
 }

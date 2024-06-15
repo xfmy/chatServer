@@ -1,3 +1,9 @@
+/**
+ * @file network_service.hpp
+ * @brief 对muduo TcpConnection进行简单包装
+ * 
+ */
+
 #pragma once
 
 #include <nlohmann/json.hpp>
@@ -27,10 +33,7 @@ private:
     void send(const std::string& msg) const
     {
         // TODO 在此处添加数据包处理代码
-        //  package obj;
-        //  obj.data = msg;
-        //  obj.encapsulation();
-        //  ptr->send(obj.buf);
+        
         ptr->send(msg);
     }
     

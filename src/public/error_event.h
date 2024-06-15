@@ -2,7 +2,7 @@
 #include <nlohmann/json.hpp>
 #include "package.h"
 #include "network_service.hpp"
-class errorEvent
+class ErrorEvent
 {
 public:
     static void protocolParseError(const NetworkService obj)
@@ -13,5 +13,3 @@ public:
         obj.send(js);
     }
 };
-
-

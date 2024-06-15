@@ -32,6 +32,7 @@ void RedisRoute::subscribe(int channel)
 bool RedisRoute::unsubscribe(int channel)
 {
     subscriberPtr_->unsubscribe(std::to_string(channel));
+    return true;
 }
 
 void RedisRoute::ObserverChannelMessage() 

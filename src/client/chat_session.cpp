@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <functional>
 
@@ -22,6 +21,8 @@ ChatSession::ChatSession(std::string ip, short port)
 {
     tcpClient_.SetSessionHandle(
         std::bind(&ChatSession::MessageCallbackHandle, this, _1, _2));
+    
+    // 注册事件回调
     commandHandlerMap["help"] = std::bind(&ChatSession::help, this, _1);
     commandHandlerMap["chat"] = std::bind(&ChatSession::chat, this, _1);
     commandHandlerMap["addfriend"] = std::bind(&ChatSession::AddFriend, this, _1);
@@ -29,6 +30,8 @@ ChatSession::ChatSession(std::string ip, short port)
     commandHandlerMap["addgroup"] = std::bind(&ChatSession::AddGroup, this, _1);
     commandHandlerMap["groupchat"] = std::bind(&ChatSession::GroupChat, this, _1);
     commandHandlerMap["loginout"] = std::bind(&ChatSession::Logout, this, _1);
+    
+    // 保证后续登录以及注册业务的同步进行
     mtx.lock();
 }
 
@@ -59,7 +62,7 @@ void ChatSession::MessageCallbackHandle(const muduo::net::TcpConnectionPtr &ptr,
 
     if (REG_MSG_ACK == msgtype)
     {
-        doRegResponse(js);
+        doRegResponse(js); // 处理注册响应的业务逻辑
     }
 }
 
@@ -85,6 +88,7 @@ void ChatSession::Login(int ID, std::string password)
     string request = js.dump();
 
     tcpClient_.send(request);
+    // 加锁保证登录响应逻辑处理完毕后执行
     mtx.lock();
     if (isLoginSuccess_)
     {
@@ -113,6 +117,7 @@ void ChatSession::registerUser(std::string userName, std::string password)
     string request = js.dump();
 
     tcpClient_.send(request);
+    // 加锁保证注册响应逻辑处理完毕后执行
     mtx.lock();
 }
 

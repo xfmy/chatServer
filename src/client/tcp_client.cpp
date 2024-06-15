@@ -15,9 +15,7 @@ TcpClient::TcpClient(muduo::net::InetAddress peer_addr)
     tcpClient_.setConnectionCallback(
         std::bind(&TcpClient::connectCallbcak, this, _1));
     tcpClient_.enableRetry();
-    // mtx_.lock();
     tcpClient_.connect();
-    // std::lock_guard<std::mutex> lock(mtx_);
 }
 
 TcpClient::~TcpClient() {}

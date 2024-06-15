@@ -1,4 +1,4 @@
-
+#pragma once
 #include <atomic>
 #include <string>
 #include <nlohmann/json.hpp>
@@ -31,7 +31,19 @@ public:
      *
      */
     void Logout(std::string);
+
+    /**
+     * @brief 用户注册
+     * 
+     * @param userName 用户名 
+     * @param password 密码
+     */
     void registerUser(std::string userName, std::string password);
+
+    /**
+     * @brief 主界面
+     * 
+     */
     void mainMenu();
 
 private:

@@ -1,9 +1,10 @@
+#pragma once
 #include "group_user.hpp"
 #include <string>
 #include <vector>
 using namespace std;
 
-// User表的ORM类
+// group user表的ORM类
 class Group
 {
 public:
@@ -24,8 +25,12 @@ public:
     vector<GroupUser> &GetUsers() { return this->users; }
 
 private:
+    /// @brief 群id
     int id;
+    /// @brief 群名称
     string name;
+    /// @brief 群描述
     string desc;
+    /// @brief 群成员
     vector<GroupUser> users;
 };

@@ -1,3 +1,8 @@
+/**
+ * @file user.h
+ * @brief 对应mysql数据库user表字段
+ * 
+ */
 #pragma once
 #include <string>
 

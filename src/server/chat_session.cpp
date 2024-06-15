@@ -3,11 +3,22 @@
 #include <vector>
 #include <muduo/base/Logging.h>
 #include "chat_session.h"
-#include "errorEvent.h"
-#include "msgType.h"
+#include "error_event.h"
+#include "msg_type.h"
+
+void ChatSession::onConnectCallback(const TcpConnectionPtr &conn) {
+    // 客户端断开链接
+    // 尝试做异常断开连接处理
+    if (conn->disconnected())
+    {
+        clientCloseException(conn);
+        conn->shutdown();
+    }
+}
 
 ChatSession::ChatSession()
 {
+    //注册相关事件回调
     userEventCallbackMap.emplace(
         std::make_pair<EnMsgType, SessionEventCallback>(
             EnMsgType::LOGIN_MSG,
@@ -56,20 +67,20 @@ void ChatSession::distribute(const TcpConnectionPtr &ptr,
         }
         else
         {
-            errorEvent::protocolParseError(ptr);
+            ErrorEvent::protocolParseError(ptr);
         }
     }
     catch (nlohmann::json::exception &e)
     {
         LOG_ERROR << fmt::format("message:{} \\  exception id: {}", e.what(),
                                  e.id);
-        errorEvent::protocolParseError(ptr);
+        ErrorEvent::protocolParseError(ptr);
     }
 }
 
 void ChatSession::handleRedisSubscribeMessage(int userid, string msg)
 {
-    lock_guard<mutex> lock(m_mutex);
+    lock_guard<mutex> lock(mtx);
     auto it = userConnectMap.find(userid);
     if (it != userConnectMap.end())
     {
@@ -108,7 +119,7 @@ void ChatSession::login(const NetworkService &conn, const nlohmann::json &js,
             {
                 // 登陆成功,记录用户连接信息  要注意线程安全
                 {
-                    lock_guard<mutex> lock(m_mutex);
+                    lock_guard<mutex> lock(mtx);
                     userConnectMap.insert({user.GetId(), conn});
                 }
 
@@ -122,7 +133,7 @@ void ChatSession::login(const NetworkService &conn, const nlohmann::json &js,
                 // 登陆成功
                 nlohmann::json response;
                 response["msgType"] = LOGIN_MSG_ACK;
-                response["code"] = 0;
+                response["code"] = 200;
                 response["id"] = user.GetId();
                 response["name"] = user.GetName();
 
@@ -183,7 +194,7 @@ void ChatSession::login(const NetworkService &conn, const nlohmann::json &js,
     {
         LOG_ERROR << fmt::format("message:{} \\  exception id: {}", e.what(),
                                  e.id);
-        errorEvent::protocolParseError(conn);
+        ErrorEvent::protocolParseError(conn);
     }
 }
 
@@ -194,7 +205,7 @@ void ChatSession::logout(const NetworkService &conn, const nlohmann::json &js,
     int userid = js["id"].get<int>();
 
     {
-        lock_guard<mutex> lock(m_mutex);
+        lock_guard<mutex> lock(mtx);
         auto it = userConnectMap.find(userid);
         if (it != userConnectMap.end())
         {
@@ -225,7 +236,7 @@ void ChatSession::oneChat(const NetworkService &conn, const nlohmann::json &js,
     {
         int toid = js["toid"].get<int>();
         {
-            std::lock_guard<std::mutex> lock(m_mutex);
+            std::lock_guard<std::mutex> lock(mtx);
             auto it = userConnectMap.find(toid);
             if (it != userConnectMap.end())
             { // 当前服务器在线
@@ -252,7 +263,7 @@ void ChatSession::oneChat(const NetworkService &conn, const nlohmann::json &js,
     {
         LOG_ERROR << fmt::format("message:{} \\  exception id: {}", e.what(),
                                  e.id);
-        errorEvent::protocolParseError(conn);
+        ErrorEvent::protocolParseError(conn);
     }
     conn.send(retJs);
 }
@@ -294,7 +305,7 @@ void ChatSession::registerUser(const NetworkService &conn,
     {
         LOG_ERROR << fmt::format("message:{} \\  exception id: {}", e.what(),
                                  e.id);
-        errorEvent::protocolParseError(conn);
+        ErrorEvent::protocolParseError(conn);
     }
 }
 
@@ -327,7 +338,7 @@ void ChatSession::groupChat(const NetworkService &conn,
     vector<int> useridVec = groupModel.QueryGroupUsers(
         userid, groupid); // useridVec为当前group中除当前userid外其他所有userid
 
-    lock_guard<mutex> lock(m_mutex);
+    lock_guard<mutex> lock(mtx);
     for (int id : useridVec)
     {
         auto it = userConnectMap.find(id);
@@ -353,17 +364,24 @@ void ChatSession::groupChat(const NetworkService &conn,
     }
 }
 
-ChatSession::~ChatSession() {}
+ChatSession::~ChatSession() 
+{
+    for (auto& it : userConnectMap)
+    {
+        clientCloseException(it.second);
+    }
+    userConnectMap.clear();
+}
 
 // 处理客户端异常退出
-void ChatSession::clientCloseException(const TcpConnectionPtr &conn)
+void ChatSession::clientCloseException(const NetworkService &conn)
 {
     User user;
     {
-        lock_guard<mutex> lock(m_mutex);
+        lock_guard<mutex> lock(mtx);
         for (auto it = userConnectMap.begin(); it != userConnectMap.end(); ++it)
         {
-            if (it->second == NetworkService(conn))
+            if (it->second == conn)
             {
                 // 从map表删除用户的链接信息
                 user.SetId(it->first);

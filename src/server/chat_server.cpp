@@ -2,7 +2,8 @@
 #include <functional>
 #include <libconfig.h++>
 #include <muduo/base/Logging.h>
-#include "chatServer.h"
+
+#include "chat_server.h"
 #include "db/mysql_database.h"
 
 using namespace libconfig;
@@ -15,6 +16,8 @@ void ChatServer::init()
     netWork.setThreadNum(std::thread::hardware_concurrency());
     netWork.setBusinessMessageCallback(
         std::bind(&ChatSession::distribute, &this->session, _1, _2, _3));
+    netWork.setConnectCallback(
+        std::bind(&ChatSession::onConnectCallback, &this->session, _1));
 
     //初始化数据库
     initDB();
@@ -30,6 +33,7 @@ void ChatServer::initDB()
     */
     try
     {
+        // 读取配置文件
         cfg.readFile("../conf/database.conf");
     }
     catch (const FileIOException &fioex)
@@ -52,6 +56,7 @@ void ChatServer::initDB()
         std::string password = cfg.lookup("database.password");
         std::string databaseName = cfg.lookup("database.databaseName");
 
+        // 配置mysql信息并登录数据库
         MysqlDataBase::GetInstance()->SetUserLogInfo(userName, password);
         MysqlDataBase::GetInstance()->SetDbSvrInfo(host, databaseName);
         MysqlDataBase::GetInstance()->Login(

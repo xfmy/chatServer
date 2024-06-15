@@ -1,5 +1,5 @@
 #!/bin/bash
 
 cmake -S . -B build
-cmake --build build -j1
+cmake --build build
 
