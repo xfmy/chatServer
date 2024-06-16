@@ -11,7 +11,8 @@ std::string package::encapsulation(const std::string &msg)
     std::string data;
 
     // 添加包头
-    data.append((const char *)(&head), sizeof package::head);
+    short _head = hostToNetwork16(head);
+    data.append((const char *)(&_head), sizeof _head);
 
     // 添加包大小
     int32_t len = msg.size();
@@ -24,7 +25,7 @@ std::string package::encapsulation(const std::string &msg)
     // 添加包校验码
     int32_t checkSum = std::hash<std::string>{}(msg);
     checkSum = htonl(checkSum);
-    data.append((const char *)(checkSum), sizeof checkSum);
+    data.append((const char *)(&checkSum), sizeof checkSum);
 
     return data;
 }
@@ -32,8 +33,9 @@ std::string package::encapsulation(const std::string &msg)
 int package::parse(std::string_view view, std::string &data)
 {
     // 寻找包头
-    size_t index = view.find(reinterpret_cast<const char *>(&package::head),
-                             sizeof package::head);
+    short _head = networkToHost16(head);
+    size_t index =
+        view.find(reinterpret_cast<const char *>(&_head), 0, sizeof _head);
     if (index == std::string_view::npos) return 0;
     int size = view.size();
 
@@ -41,13 +43,15 @@ int package::parse(std::string_view view, std::string &data)
     int emptyPackageSize = index + sizeof(package::head) + 8;
 
     //判断最低长度是否满足
-    if (emptyPackageSize < size) return 0;
+    if (emptyPackageSize > size)
+        return 0;
 
     // 获取包长度数据
     index += sizeof package::head;
     int32_t len = ntohl(*(int32_t *)(view.begin() + index));
 
-    if (index - package::head + len + emptyPackageSize > size) return 0;
+    if (len + emptyPackageSize > size) 
+        return 0;
     index += 4;
 
     // 获取数据

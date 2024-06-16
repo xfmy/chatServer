@@ -15,7 +15,7 @@
 #include "muduo/net/EventLoopThread.h"
 #include "muduo/net/Buffer.h"
 #include "muduo/base/Timestamp.h"
-
+#include "network_service.hpp"
 using SessionHandle =
     std::function<void(const muduo::net::TcpConnectionPtr&, std::string)>;
 
@@ -30,7 +30,7 @@ public:
      *
      * @param msg 消息内容
      */
-    void send(std::string msg);
+    void send(nlohmann::json msg);
 
     /**
      * @brief 消息回调
@@ -57,6 +57,7 @@ private:
     muduo::net::TcpClient tcpClient_;
     /// @brief 连接管理类
     muduo::net::TcpConnectionPtr connectionPtr;
+    std::unique_ptr<NetworkService> conn;
     /// @brief 业务层回调
     SessionHandle sessionhandle_;
 };

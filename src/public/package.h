@@ -1,42 +1,43 @@
+/**
+ * @file package.h
+ * @brief 解决粘包,自定义协议序列化及反序列化
+ * 
+ */
 #pragma once
 #include <string>
 #include <optional>
 #define MAX_BUF 4096
 
-// 包的设计类
-/*************************************************************************************
- *9 + data（长度）
- * UINT parse(char* buf, UINT& strSz)
- *	参数：（缓冲区，数据大小）
- *	功能： 解析包的数据，
- *	返回值：0-》解析失败，其他-》buf使用大小
- ***************************************************************************************/
 #pragma pack(push)
 #pragma pack(1)
 class package
 {
 public:
-    // package() = default;
-    // package(const std::string &);
-
-    //const char *encapsulation(); // 封包，返回数据
+    /**
+     * @brief 对待发送数据进行序列化
+     * 
+     * @param msg 需要发送的消息
+     * @return std::string 返回序列化的数据
+     */
     static std::string encapsulation(const std::string & msg);
 
-    
+    /**
+     * @brief 对接收数据进行反序列化
+     * 
+     * @param view 待解析数据缓冲区
+     * @param msg 出参,存放解析出的数据
+     * @return int 返回解析出一个包消耗的字节数量
+     */
     static int parse(std::string_view view, std::string& msg);
-    //void parse();
-    //int GetSize(); // 获取包大小
+
 public:
     // 0XFEFF 头部	2字节 
     static const unsigned short head = 0xFEFF;
-    // 长度			2字节
+    // 数据长度			4字节
     //int len;
     // 传输数据
     //std::string data;
     // 校验和			4字节
     //int checksum;
-
-    // 封装之后的数据
-    //std::string buf;
 };
 #pragma pack(pop)

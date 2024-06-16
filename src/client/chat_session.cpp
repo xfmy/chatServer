@@ -2,7 +2,8 @@
 #include <functional>
 
 #include "chat_session.h"
-#include "msgType.h"
+#include "msg_type.h"
+
 
 using namespace std::placeholders;
 
@@ -85,9 +86,8 @@ void ChatSession::Login(int ID, std::string password)
     js["msgType"] = LOGIN_MSG;
     js["id"] = ID;
     js["password"] = password;
-    string request = js.dump();
 
-    tcpClient_.send(request);
+    tcpClient_.send(js);
     // 加锁保证登录响应逻辑处理完毕后执行
     mtx.lock();
     if (isLoginSuccess_)
@@ -103,8 +103,7 @@ void ChatSession::Logout(std::string)
     json js;
     js["msgType"] = EnMsgType::LOGINOUT_MSG;
     js["id"] = currentUser_.GetId();
-    std::string buffer = js.dump();
-    tcpClient_.send(buffer);
+    tcpClient_.send(js);
     isMainMenuRunning_ = false;
 }
 
@@ -114,9 +113,8 @@ void ChatSession::registerUser(std::string userName, std::string password)
     js["msgType"] = EnMsgType::REG_MSG;
     js["name"] = userName;
     js["password"] = password;
-    string request = js.dump();
 
-    tcpClient_.send(request);
+    tcpClient_.send(js);
     // 加锁保证注册响应逻辑处理完毕后执行
     mtx.lock();
 }
@@ -269,9 +267,8 @@ void ChatSession::AddFriend(string friendid)
     js["msgType"] = ADD_FRIEND_MSG;
     js["id"] = currentUser_.GetId();
     js["friendid"] = _friendid;
-    string buffer = js.dump();
 
-    tcpClient_.send(buffer);
+    tcpClient_.send(js);
 }
 
 void ChatSession::CreateGroup(string info)
@@ -291,9 +288,8 @@ void ChatSession::CreateGroup(string info)
     js["id"] = currentUser_.GetId();
     js["groupname"] = groupname;
     js["groupdesc"] = groupdesc;
-    string buffer = js.dump();
 
-    tcpClient_.send(buffer);
+    tcpClient_.send(js);
 }
 
 void ChatSession::AddGroup(string info)
@@ -303,9 +299,7 @@ void ChatSession::AddGroup(string info)
     js["msgType"] = ADD_GROUP_MSG;
     js["id"] = currentUser_.GetId();
     js["groupid"] = groupid;
-    string buffer = js.dump();
-
-    tcpClient_.send(buffer);
+    tcpClient_.send(js);
 }
 
 void ChatSession::GroupChat(string msg)
@@ -327,9 +321,8 @@ void ChatSession::GroupChat(string msg)
     js["groupid"] = groupid;
     js["msg"] = message;
     js["time"] = GetCurrentTime();
-    string buffer = js.dump();
 
-    tcpClient_.send(buffer);
+    tcpClient_.send(js);
 }
 
 void ChatSession::chat(string msg)
@@ -351,9 +344,8 @@ void ChatSession::chat(string msg)
     js["toid"] = friendid;
     js["msg"] = message;
     js["time"] = GetCurrentTime();
-    string buffer = js.dump();
 
-    tcpClient_.send(buffer);
+    tcpClient_.send(js);
 }
 
 void ChatSession::help(std::string)

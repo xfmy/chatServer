@@ -12,6 +12,9 @@
 #include "model/group_user_model.h"
 #include "model/friend_model.h"
 
+using namespace muduo;
+using namespace muduo::net;
+
 using SessionEventCallback = std::function<void(
     const NetworkService &network, const nlohmann::json &js, Timestamp time)>;
 

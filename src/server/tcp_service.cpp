@@ -43,20 +43,13 @@ void TcpService::start()
 void TcpService::onMessageCallback(const TcpConnectionPtr &ptr, Buffer *buf,
                                    Timestamp time)
 {
-    // 首先解析一个完整的包,然后调用onMessageCompleteCallback处理
-    //TODO:先关闭协议解析
-    // std::string_view view(buf->peek(), buf->readableBytes());
-    // std::optional<package> res = package::parse(view);
-    // if(res.has_value())
-    // {
-    //     //回收缓冲区的内存
-    //     buf->retrieve(res->GetSize());
-    //     businessMsgCallback(ptr, res->data, time);
-    // }
-
+    // 先在缓冲区中解析出包,在调用业务层消息处理回调
     std::string view(buf->peek(), buf->readableBytes());
-    buf->retrieveAll();
-    businessMsgCallback(ptr, view, time);
+    std::string msg;
+    int index = package::parse(view,msg);
+    if(index == 0) return;
+    buf->retrieve(index);
+    businessMsgCallback(ptr, msg, time);
 }
 
 void TcpService::onThreadInitCallback(EventLoop *)

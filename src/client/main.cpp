@@ -1,7 +1,7 @@
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include "chat_session.h"
-#include "msgType.h"
+//#include "msgType.h"
 using json = nlohmann::json;
 
 int main(int argc, char **argv)
