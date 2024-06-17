@@ -10,7 +10,7 @@ class User
 {
 public:
     User(int id_, std::string name_, std::string password_, std::string state_)
-        : id(id),
+        : id(id_),
           name(name_),
           password(password_),
           state(state_)

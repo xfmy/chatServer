@@ -177,8 +177,8 @@ void ChatSession::doLoginResponse(json &responsejs)
                 json grpjs = json::parse(groupstr);
                 Group group;
                 group.SetId(grpjs["id"].get<int>());
-                group.SetName(grpjs["groupname"]);
-                group.SetDesc(grpjs["groupdesc"]);
+                group.SetName(grpjs["name"]);
+                group.SetDesc(grpjs["desc"]);
 
                 vector<string> vec2 = grpjs["users"];
                 for (string &userstr : vec2)
@@ -200,9 +200,9 @@ void ChatSession::doLoginResponse(json &responsejs)
         ShowCurrentUserData();
 
         // 显示当前用户的离线消息  个人聊天信息或者群组消息
-        if (responsejs.contains("offlinemsg"))
+        if (responsejs.contains("offlinemessage"))
         {
-            vector<string> vec = responsejs["offlinemsg"];
+            vector<string> vec = responsejs["offlinemessage"];
             for (string &str : vec)
             {
                 json js = json::parse(str);

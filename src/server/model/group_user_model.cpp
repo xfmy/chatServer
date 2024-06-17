@@ -55,7 +55,7 @@ vector<Group> GroupModel::QueryGroups(int userid)
     for (Group &group : groupVec)
     {
         sql = fmt::format("select a.id,a.name,a.state,b.grouprole from user a \
-            inner join groupuser b on b.userid = a.id where b.groupid=%d",
+            inner join groupuser b on b.userid = a.id where b.groupid={}",
                           group.GetId());
         res = MysqlDataBase::GetInstance()->RunSqlQuery(sql);
         res->beforeFirst();

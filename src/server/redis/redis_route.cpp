@@ -46,7 +46,7 @@ void RedisRoute::ObserverChannelMessage()
         }
         catch (const TimeoutError &e)
         {
-            LOG_ERROR << "redis route timeout:" << e.what();
+            //LOG_ERROR << "redis route timeout:" << e.what();
             continue;
         }
         catch (const Error &err)

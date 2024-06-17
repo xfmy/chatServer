@@ -1,6 +1,7 @@
 #include <nlohmann/json.hpp>
 #include <fmt/core.h>
 #include <vector>
+#include <thread>
 #include <muduo/base/Logging.h>
 #include "chat_session.h"
 #include "error_event.h"
@@ -51,6 +52,9 @@ ChatSession::ChatSession()
 
     // 设置上报消息的回调
     redisRoute.InitNotifyHandler(std::bind(&ChatSession::handleRedisSubscribeMessage,this,_1,_2));
+    // 单独线程处理redis消息订阅
+    std::thread th(&RedisRoute::ObserverChannelMessage, &redisRoute);
+    th.detach();
 }
 
 void ChatSession::distribute(const TcpConnectionPtr &ptr,
@@ -221,7 +225,7 @@ void ChatSession::logout(const NetworkService &conn, const nlohmann::json &js,
     User user(userid, "", "", "offline");
     userSql.UpdateState(user);
 
-    LOG_INFO << user.GetName() + ":退出登录";
+    LOG_INFO << user.GetId() + ":退出登录";
 }
 
 void ChatSession::oneChat(const NetworkService &conn, const nlohmann::json &js,
