@@ -1,7 +1,6 @@
 #include <muduo/base/Logging.h>
 #include "redis_route.h"
 
-
 using namespace std::placeholders;
 
 RedisRoute::RedisRoute(std::string ip, int port)
@@ -46,12 +45,10 @@ void RedisRoute::ObserverChannelMessage()
         }
         catch (const TimeoutError &e)
         {
-            //LOG_ERROR << "redis route timeout:" << e.what();
             continue;
         }
         catch (const Error &err)
         {
-            // Handle other exceptions.
             LOG_ERROR << "Found unknown error, error message:"<<err.what();
         }
     }

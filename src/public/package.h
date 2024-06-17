@@ -1,6 +1,6 @@
 /**
  * @file package.h
- * @brief 解决粘包,自定义协议序列化及反序列化
+ * @brief 解决tcp粘包
  * 
  */
 #pragma once
@@ -34,10 +34,10 @@ public:
     // 0XFEFF 头部	2字节 
     static const unsigned short head = 0xFEFF;
     // 数据长度			4字节
-    //int len;
+    //int32 len;
     // 传输数据
     //std::string data;
     // 校验和			4字节
-    //int checksum;
+    //int32 checksum;
 };
 #pragma pack(pop)

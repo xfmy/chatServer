@@ -35,8 +35,8 @@ void TcpClient::connectCallbcak(const muduo::net::TcpConnectionPtr& ptr)
 {
     if (ptr->connected()){
         std::cout << "已成功和服务器连接" << std::endl;
-        connectionPtr = ptr;
-        conn = std::make_unique<NetworkService>(connectionPtr);
+        connectionPtr_ = ptr;
+        conn_ = std::make_unique<NetworkService>(connectionPtr_);
     }
     else
         std::cout << "已经和服务器断开连接" << std::endl;
@@ -45,5 +45,5 @@ void TcpClient::connectCallbcak(const muduo::net::TcpConnectionPtr& ptr)
 void TcpClient::send(nlohmann::json json)
 {
     //std::cout << "send message:" << msg << std::endl;
-    conn->send(json);
+    conn_->send(json);
 }

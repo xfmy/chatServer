@@ -2,7 +2,10 @@
 #include <cppconn/connection.h>
 #include <cppconn/driver.h>
 #include <condition_variable>
-
+/**
+ * @brief 连接池
+ * 
+ */
 class ConnectPool
 {
 private:

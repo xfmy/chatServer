@@ -27,7 +27,7 @@ public:
     ChatSession();
     ~ChatSession();
 
-    //分发业务
+    // 分发业务
     void distribute(const TcpConnectionPtr &ptr, const std::string &mes,
                     Timestamp time);
     // 从redis消息队列中获取订阅的消息
@@ -65,18 +65,18 @@ private:
 
 private:
     // 记录所有用户连接的map
-    std::unordered_map<int, NetworkService> userConnectMap;
+    std::unordered_map<int, NetworkService> userConnectMap_;
     //事件注册器
-    std::unordered_map<EnMsgType, SessionEventCallback> userEventCallbackMap;
+    std::unordered_map<EnMsgType, SessionEventCallback> userEventCallbackMap_;
     // 对于map操作保证其线程安全性
-    std::mutex mtx;
+    std::mutex mtx_;
 
     // 数据库ORM操作类
-    UserModel userSql;
-    MessageModel offlineSql;
-    GroupModel groupModel;
-    FriendModel friendModel;
+    UserModel userModel_;
+    MessageModel offlineMessageModel_;
+    GroupModel groupModel_;
+    FriendModel friendModel_;
 
     // redis消息路由类
-    RedisRoute redisRoute;
+    RedisRoute redisRoute_;
 };

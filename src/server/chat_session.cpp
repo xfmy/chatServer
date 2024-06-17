@@ -7,8 +7,8 @@
 #include "error_event.h"
 #include "msg_type.h"
 
-
-void ChatSession::onConnectCallback(const TcpConnectionPtr &conn) {
+void ChatSession::onConnectCallback(const TcpConnectionPtr &conn)
+{
     // 客户端断开链接
     // 尝试做异常断开连接处理
     if (conn->disconnected())
@@ -21,39 +21,40 @@ void ChatSession::onConnectCallback(const TcpConnectionPtr &conn) {
 ChatSession::ChatSession()
 {
     //注册相关事件回调
-    userEventCallbackMap.emplace(
+    userEventCallbackMap_.emplace(
         std::make_pair<EnMsgType, SessionEventCallback>(
             EnMsgType::LOGIN_MSG,
             std::bind(&ChatSession::login, this, _1, _2, _3)));
-    userEventCallbackMap.emplace(
+    userEventCallbackMap_.emplace(
         std::make_pair<EnMsgType, SessionEventCallback>(
             EnMsgType::REG_MSG,
             std::bind(&ChatSession::registerUser, this, _1, _2, _3)));
-    userEventCallbackMap.emplace(
+    userEventCallbackMap_.emplace(
         std::make_pair<EnMsgType, SessionEventCallback>(
             EnMsgType::ONE_CHAT_MSG,
             std::bind(&ChatSession::oneChat, this, _1, _2, _3)));
-    userEventCallbackMap.emplace(
+    userEventCallbackMap_.emplace(
         std::make_pair<EnMsgType, SessionEventCallback>(
             EnMsgType::LOGINOUT_MSG,
             std::bind(&ChatSession::logout, this, _1, _2, _3)));
-    userEventCallbackMap.emplace(
+    userEventCallbackMap_.emplace(
         std::make_pair<EnMsgType, SessionEventCallback>(
             EnMsgType::ADD_GROUP_MSG,
             std::bind(&ChatSession::addGroup, this, _1, _2, _3)));
-    userEventCallbackMap.emplace(
+    userEventCallbackMap_.emplace(
         std::make_pair<EnMsgType, SessionEventCallback>(
             EnMsgType::ADD_FRIEND_MSG,
             std::bind(&ChatSession::addFriend, this, _1, _2, _3)));
-    userEventCallbackMap.emplace(
+    userEventCallbackMap_.emplace(
         std::make_pair<EnMsgType, SessionEventCallback>(
             EnMsgType::GROUP_CHAT_MSG,
             std::bind(&ChatSession::groupChat, this, _1, _2, _3)));
 
     // 设置上报消息的回调
-    redisRoute.InitNotifyHandler(std::bind(&ChatSession::handleRedisSubscribeMessage,this,_1,_2));
+    redisRoute_.InitNotifyHandler(
+        std::bind(&ChatSession::handleRedisSubscribeMessage, this, _1, _2));
     // 单独线程处理redis消息订阅
-    std::thread th(&RedisRoute::ObserverChannelMessage, &redisRoute);
+    std::thread th(&RedisRoute::ObserverChannelMessage, &redisRoute_);
     th.detach();
 }
 
@@ -65,8 +66,8 @@ void ChatSession::distribute(const TcpConnectionPtr &ptr,
         nlohmann::json js = nlohmann::json::parse(mes);
         EnMsgType msgType = static_cast<EnMsgType>(js["msgType"].get<int>());
 
-        const auto &it = userEventCallbackMap.find(msgType);
-        if (it != userEventCallbackMap.end())
+        const auto &it = userEventCallbackMap_.find(msgType);
+        if (it != userEventCallbackMap_.end())
         {
             it->second(ptr, js, time);
         }
@@ -85,9 +86,9 @@ void ChatSession::distribute(const TcpConnectionPtr &ptr,
 
 void ChatSession::handleRedisSubscribeMessage(int userid, string msg)
 {
-    lock_guard<mutex> lock(mtx);
-    auto it = userConnectMap.find(userid);
-    if (it != userConnectMap.end())
+    std::lock_guard<std::mutex> lock(mtx_);
+    auto it = userConnectMap_.find(userid);
+    if (it != userConnectMap_.end())
     {
         nlohmann::json json = nlohmann::json::parse(msg);
         it->second.send(json);
@@ -95,7 +96,7 @@ void ChatSession::handleRedisSubscribeMessage(int userid, string msg)
     }
 
     // 存储该用户的离线消息
-    offlineSql.insert(userid, msg);
+    offlineMessageModel_.insert(userid, msg);
 }
 
 //用户登录
@@ -105,7 +106,7 @@ void ChatSession::login(const NetworkService &conn, const nlohmann::json &js,
     LOG_INFO << "do login service";
     int id = js["id"].get<int>();
     string pwd = js["password"];
-    User user = userSql.query(id);
+    User user = userModel_.query(id);
 
     try
     {
@@ -124,16 +125,16 @@ void ChatSession::login(const NetworkService &conn, const nlohmann::json &js,
             {
                 // 登陆成功,记录用户连接信息  要注意线程安全
                 {
-                    lock_guard<mutex> lock(mtx);
-                    userConnectMap.insert({user.GetId(), conn});
+                    std::lock_guard<std::mutex> lock(mtx_);
+                    userConnectMap_.insert({user.GetId(), conn});
                 }
 
                 // id 用户登陆成功后，向redis订阅channel id
-                redisRoute.subscribe(id);
+                redisRoute_.subscribe(id);
 
                 // 更新用户状态信息
                 user.SetState("online");
-                userSql.UpdateState(user);
+                userModel_.UpdateState(user);
 
                 // 登陆成功
                 nlohmann::json response;
@@ -143,31 +144,31 @@ void ChatSession::login(const NetworkService &conn, const nlohmann::json &js,
                 response["name"] = user.GetName();
 
                 // 查询用户是否有离线消息
-                vector<string> vec = offlineSql.query(id);
+                std::vector<std::string> vec = offlineMessageModel_.query(id);
                 if (!vec.empty())
                 {
                     response["offlinemessage"] = vec;
                     // 读取该用户的离线消息后，把该用户的所有离线消息删除掉
-                    offlineSql.remove(id);
+                    offlineMessageModel_.remove(id);
                 }
                 // 查询用户的好友信息，并返回
-                vector<string> userVec = friendModel.query(id);
+                std::vector<std::string> userVec = friendModel_.query(id);
                 if (!userVec.empty())
                 {
                     response["friends"] = userVec;
                 }
                 // 查询用户的群组信息，并返回
-                vector<Group> groupuserVec = groupModel.QueryGroups(id);
+                std::vector<Group> groupuserVec = groupModel_.QueryGroups(id);
                 if (!groupuserVec.empty())
                 {
-                    vector<string> groupInfo;
+                    std::vector<std::string> groupInfo;
                     for (Group group : groupuserVec)
                     {
                         nlohmann::json groupjs;
                         groupjs["id"] = group.GetId();
                         groupjs["name"] = group.GetName();
                         groupjs["desc"] = group.GetDesc();
-                        vector<string> userInfo;
+                        std::vector<std::string> userInfo;
                         for (GroupUser user : group.GetUsers())
                         {
                             nlohmann::json js;
@@ -210,20 +211,20 @@ void ChatSession::logout(const NetworkService &conn, const nlohmann::json &js,
     int userid = js["id"].get<int>();
 
     {
-        lock_guard<mutex> lock(mtx);
-        auto it = userConnectMap.find(userid);
-        if (it != userConnectMap.end())
+        std::lock_guard<std::mutex> lock(mtx_);
+        auto it = userConnectMap_.find(userid);
+        if (it != userConnectMap_.end())
         {
-            userConnectMap.erase(it);
+            userConnectMap_.erase(it);
         }
     }
 
     // 用户注销，相当于就是下线，在redis中取消订阅通道
-    redisRoute.unsubscribe(userid);
+    redisRoute_.unsubscribe(userid);
 
     // 更新用户的状态信息
     User user(userid, "", "", "offline");
-    userSql.UpdateState(user);
+    userModel_.UpdateState(user);
 
     LOG_INFO << user.GetId() + ":退出登录";
 }
@@ -241,22 +242,22 @@ void ChatSession::oneChat(const NetworkService &conn, const nlohmann::json &js,
     {
         int toid = js["toid"].get<int>();
         {
-            std::lock_guard<std::mutex> lock(mtx);
-            auto it = userConnectMap.find(toid);
-            if (it != userConnectMap.end())
+            std::lock_guard<std::mutex> lock(mtx_);
+            auto it = userConnectMap_.find(toid);
+            if (it != userConnectMap_.end())
             { // 当前服务器在线
                 NetworkService(it->second).send(js);
             }
             else
-            { 
+            {
                 // 查询toid是否在线
-                User user = userSql.query(toid);
+                User user = userModel_.query(toid);
                 if (user.GetState() == "online")
                 {
-                    redisRoute.publish(toid, js.dump());
+                    redisRoute_.publish(toid, js.dump());
                 }
                 // 不在线
-                offlineSql.insert(toid, js.dump());
+                offlineMessageModel_.insert(toid, js.dump());
             }
         }
         retJs["code"] = 200;
@@ -287,7 +288,7 @@ void ChatSession::registerUser(const NetworkService &conn,
         user.SetPassword(password);
         user.SetState("offline");
 
-        int res = userSql.insert(user);
+        int res = userModel_.insert(user);
         nlohmann::json retJs;
         if (!res)
         {
@@ -296,8 +297,8 @@ void ChatSession::registerUser(const NetworkService &conn,
         }
         else
         {
-            // userSql.insertUser(user);
-            // user = userSql.queryUser(name, password);
+            // userModel_.insertUser(user);
+            // user = userModel_.queryUser(name, password);
             retJs["code"] = 200;
             retJs["msg"] = "注册成功";
             retJs["id"] = user.GetId();
@@ -320,7 +321,7 @@ void ChatSession::addGroup(const NetworkService &conn, const nlohmann::json &js,
 {
     int userid = js["id"].get<int>();
     int groupid = js["groupid"].get<int>();
-    groupModel.AddGroup(userid, groupid, "normal");
+    groupModel_.AddGroup(userid, groupid, "normal");
 }
 
 // 添加好友业务 msgid id friendid
@@ -331,7 +332,7 @@ void ChatSession::addFriend(const NetworkService &conn,
     int friendid = js["friendid"].get<int>();
 
     // 存储好友信息
-    friendModel.insert(userid, friendid);
+    friendModel_.insert(userid, friendid);
 }
 
 // 群组聊天业务
@@ -340,14 +341,14 @@ void ChatSession::groupChat(const NetworkService &conn,
 {
     int userid = js["id"].get<int>();
     int groupid = js["groupid"].get<int>();
-    vector<int> useridVec = groupModel.QueryGroupUsers(
+    std::vector<int> useridVec = groupModel_.QueryGroupUsers(
         userid, groupid); // useridVec为当前group中除当前userid外其他所有userid
 
-    lock_guard<mutex> lock(mtx);
+    std::lock_guard<std::mutex> lock(mtx_);
     for (int id : useridVec)
     {
-        auto it = userConnectMap.find(id);
-        if (it != userConnectMap.end())
+        auto it = userConnectMap_.find(id);
+        if (it != userConnectMap_.end())
         {
             // 转发群消息
             it->second.send(js);
@@ -355,27 +356,27 @@ void ChatSession::groupChat(const NetworkService &conn,
         else
         {
             // 查询toid是否在线
-            User user = userSql.query(id);
+            User user = userModel_.query(id);
             if (user.GetState() == "online")
             {
-                redisRoute.publish(id, js.dump());
+                redisRoute_.publish(id, js.dump());
             }
             else
             {
                 // 存储离线群消息
-                offlineSql.insert(id, js.dump());
+                offlineMessageModel_.insert(id, js.dump());
             }
         }
     }
 }
 
-ChatSession::~ChatSession() 
+ChatSession::~ChatSession()
 {
-    for (auto& it : userConnectMap)
+    for (auto &it : userConnectMap_)
     {
         clientCloseException(it.second);
     }
-    userConnectMap.clear();
+    userConnectMap_.clear();
 }
 
 // 处理客户端异常退出
@@ -383,26 +384,27 @@ void ChatSession::clientCloseException(const NetworkService &conn)
 {
     User user;
     {
-        lock_guard<mutex> lock(mtx);
-        for (auto it = userConnectMap.begin(); it != userConnectMap.end(); ++it)
+        std::lock_guard<std::mutex> lock(mtx_);
+        for (auto it = userConnectMap_.begin(); it != userConnectMap_.end();
+             ++it)
         {
             if (it->second == conn)
             {
                 // 从map表删除用户的链接信息
                 user.SetId(it->first);
-                userConnectMap.erase(it);
+                userConnectMap_.erase(it);
                 break;
             }
         }
     }
 
     // 用户注销，相当于就是下线，在redis中取消订阅通道
-    redisRoute.unsubscribe(user.GetId());
+    redisRoute_.unsubscribe(user.GetId());
 
     // 更新用户的状态信息
     if (user.GetId() != -1)
     {
         user.SetState("offline");
-        userSql.UpdateState(user);
+        userModel_.UpdateState(user);
     }
 }

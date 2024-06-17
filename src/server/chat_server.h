@@ -11,7 +11,7 @@ class ChatServer{
 public:
     ChatServer(int port);
 
-    /// 初始化
+    /// @brief 初始化
     void init();
 
     /// @brief 启动服务器 

@@ -1,15 +1,34 @@
 #pragma once
 #include <string>
 #include <vector>
+
+/**
+ * @brief 离线消息ORM类
+ * 
+ */
 class MessageModel
 {
 public:
-    // 存储用户离线消息
+    /**
+     * @brief 插入用户离线消息
+     *
+     * @param userid 用户id
+     * @param msg 离线消息
+     */
     void insert(int userid, std::string msg);
-    // 删除用户离线消息
-    void remove(int userid);
-    // 查询用户离线消息
-    std::vector<std::string> query(int userid);
 
-private:
+    /**
+     * @brief  删除用户离线消息
+     *
+     * @param userid 用户id
+     */
+    void remove(int userid);
+
+    /**
+     * @brief 查询用户离线消息
+     *
+     * @param userid 用户id
+     * @return std::vector<std::string> 返回离线消息列表
+     */
+    std::vector<std::string> query(int userid);
 };

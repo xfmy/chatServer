@@ -1,4 +1,8 @@
-
+/**
+ * @file mysql_database.h
+ * @brief 提供数据库操作接口,内置连接池
+ * 
+ */
 #pragma once
 #include <cppconn/resultset.h>
 #include <cppconn/statement.h>
@@ -27,9 +31,6 @@ public:
     virtual void SetDbSvrInfo(std::string url, std::string pDbName);
     //设置用户登录信息
     virtual void SetUserLogInfo(std::string pUserName, std::string pPwd);
-
-public:
-    //static MysqlDataBase* instance;
 
 private:
     /// @brief 连接池管理类

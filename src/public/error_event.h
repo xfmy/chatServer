@@ -1,6 +1,5 @@
 #pragma once
 #include <nlohmann/json.hpp>
-#include "package.h"
 #include "network_service.hpp"
 class ErrorEvent
 {

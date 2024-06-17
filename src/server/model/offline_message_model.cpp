@@ -1,10 +1,9 @@
+#include <fmt/core.h>
 #include "mysql_database.h"
 #include "offline_message_model.h"
-#include <fmt/core.h>
 
 void MessageModel::insert(int id, std::string msg)
 {
-    // auto statement = mysqlConnPool::getObject()->getStatement();
     std::string sql =
         fmt::format("insert into offlinemessage values({}, '{}')", id, msg);
     MysqlDataBase::GetInstance()->RunSqlExec(sql);
@@ -12,7 +11,6 @@ void MessageModel::insert(int id, std::string msg)
 std::vector<std::string> MessageModel::query(int id)
 {
     std::vector<std::string> resArr;
-    // auto statement = mysqlConnPool::getObject()->getStatement();
     std::string sql =
         fmt::format("select * from offlinemessage where userid={}", id);
     sql::ResultSet *res = MysqlDataBase::GetInstance()->RunSqlQuery(sql);

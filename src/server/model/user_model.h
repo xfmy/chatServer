@@ -1,7 +1,11 @@
 #pragma once
-#include "user.h"
 #include <cppconn/resultset.h>
-// User表的数据操作类
+#include "user.h"
+
+/**
+ * @brief user表orm类
+ * 
+ */
 class UserModel
 {
 public:

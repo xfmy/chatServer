@@ -34,15 +34,15 @@ public:
 
     /**
      * @brief 用户注册
-     * 
-     * @param userName 用户名 
+     *
+     * @param userName 用户名
      * @param password 密码
      */
     void registerUser(std::string userName, std::string password);
 
     /**
      * @brief 主界面
-     * 
+     *
      */
     void mainMenu();
 
@@ -129,8 +129,8 @@ private:
 
     // 记录登录状态
     std::atomic_bool isLoginSuccess_{false};
-    std::mutex mtx;
+    std::mutex mtx_;
     // 注册系统支持的客户端命令处理
     std::unordered_map<std::string, std::function<void(std::string)>>
-        commandHandlerMap;
+        commandHandlerMap_;
 };

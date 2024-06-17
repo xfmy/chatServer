@@ -1,6 +1,6 @@
+#include <fmt/core.h>
 #include "group_user_model.h"
 #include "mysql_database.h"
-#include <fmt/core.h>
 
 // 创建群组
 bool GroupModel::CreateGroup(Group &group)
@@ -26,7 +26,7 @@ void GroupModel::AddGroup(int userid, int groupid, std::string role)
 }
 
 // 查询用户所在群组信息
-vector<Group> GroupModel::QueryGroups(int userid)
+std::vector<Group> GroupModel::QueryGroups(int userid)
 {
     /*
     1. 先根据userid在groupuser表中查询出该用户所属的群组信息
@@ -35,7 +35,7 @@ vector<Group> GroupModel::QueryGroups(int userid)
     std::string sql = fmt::format("select a.id,a.groupname,a.groupdesc from allgroup a inner join \
          groupuser b on a.id = b.groupid where b.userid={}",
                                   userid);
-    vector<Group> groupVec;
+    std::vector<Group> groupVec;
 
     //const auto &statement = mysqlConnPool::getObject()->getStatement();
     sql::ResultSet *res = MysqlDataBase::GetInstance()->RunSqlQuery(sql);
@@ -75,10 +75,10 @@ vector<Group> GroupModel::QueryGroups(int userid)
 }
 
 // 根据指定的groupid查询群组用户id列表，除userid自己，主要用户群聊业务给群组其它成员群发消息
-vector<int> GroupModel::QueryGroupUsers(int userid, int groupid)
+std::vector<int> GroupModel::QueryGroupUsers(int userid, int groupid)
 {
     std::string sql = fmt::format("select userid from groupuser where groupid = {} and userid != {}", groupid, userid);
-    vector<int> idVec;
+    std::vector<int> idVec;
     sql::ResultSet *res = MysqlDataBase::GetInstance()->RunSqlQuery(sql);
     res->beforeFirst();
     while (res->next())

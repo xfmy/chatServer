@@ -2,13 +2,15 @@
 #include "group_user.hpp"
 #include <string>
 #include <vector>
-using namespace std;
 
-// group user表的ORM类
+/**
+ * @brief 对应mysql数据库group user表
+ *
+ */
 class Group
 {
 public:
-    Group(int id = -1, string name = "", string desc = "")
+    Group(int id = -1, std::string name = "", std::string desc = "")
     {
         this->id = id;
         this->name = name;
@@ -16,21 +18,21 @@ public:
     }
 
     void SetId(int id) { this->id = id; }
-    void SetName(string name) { this->name = name; }
-    void SetDesc(string desc) { this->desc = desc; }
+    void SetName(std::string name) { this->name = name; }
+    void SetDesc(std::string desc) { this->desc = desc; }
 
     int GetId() { return this->id; }
-    string GetName() { return this->name; }
-    string GetDesc() { return this->desc; }
-    vector<GroupUser> &GetUsers() { return this->users; }
+    std::string GetName() { return this->name; }
+    std::string GetDesc() { return this->desc; }
+    std::vector<GroupUser> &GetUsers() { return this->users; }
 
 private:
     /// @brief 群id
     int id;
     /// @brief 群名称
-    string name;
+    std::string name;
     /// @brief 群描述
-    string desc;
+    std::string desc;
     /// @brief 群成员
-    vector<GroupUser> users;
+    std::vector<GroupUser> users;
 };

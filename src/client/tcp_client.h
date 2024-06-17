@@ -56,8 +56,8 @@ private:
     /// @brief tcp客户端类
     muduo::net::TcpClient tcpClient_;
     /// @brief 连接管理类
-    muduo::net::TcpConnectionPtr connectionPtr;
-    std::unique_ptr<NetworkService> conn;
+    muduo::net::TcpConnectionPtr connectionPtr_;
+    std::unique_ptr<NetworkService> conn_;
     /// @brief 业务层回调
     SessionHandle sessionhandle_;
 };

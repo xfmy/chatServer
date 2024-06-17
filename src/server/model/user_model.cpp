@@ -1,7 +1,7 @@
-#include "user_model.h"
 #include <cppconn/statement.h>
 #include <fmt/core.h>
 #include "mysql_database.h"
+#include "user_model.h"
 
 bool UserModel::insert(User &user)
 {
@@ -29,20 +29,7 @@ bool UserModel::UpdateState(User user)
     return MysqlDataBase::GetInstance()->RunSqlExec(sql);
 }
 
-// int userModel::queryId(const std::string name)
-// {
-//     std::string sql = fmt::format("select id from user where name='{}'",
-//     name); sql::ResultSet *res = CMysqlDataBase::m_pMysql->RunSqlQuery(sql);
-//     res->last();
-//     size_t id = -1;
-//     if (res->getRow() != 0)
-//     {
-//         res->first();
-//         id = res->getInt("id");
-//     }
-//     res->close();
-//     return id;
-// }
+
 User UserModel::query(int id)
 {
     std::string sql = fmt::format("select * from user where id = {}", id);
@@ -59,6 +46,23 @@ User UserModel::query(int id)
     res->close();
     return user;
 }
+
+// int userModel::queryId(const std::string name)
+// {
+//     std::string sql = fmt::format("select id from user where name='{}'",
+//     name); sql::ResultSet *res = CMysqlDataBase::m_pMysql->RunSqlQuery(sql);
+//     res->last();
+//     size_t id = -1;
+//     if (res->getRow() != 0)
+//     {
+//         res->first();
+//         id = res->getInt("id");
+//     }
+//     res->close();
+//     return id;
+// }
+
+
 // chatdb::user userModel::query(int id, sql::Statement *stmt)
 // {
 //     std::string sql = fmt::format("select * from user where id={}", id);

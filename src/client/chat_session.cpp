@@ -4,11 +4,10 @@
 #include "chat_session.h"
 #include "msg_type.h"
 
-
 using namespace std::placeholders;
 
 // 系统支持的客户端命令列表
-std::unordered_map<string, string> commandMap = {
+std::unordered_map<std::string, std::string> commandMap = {
     {"help", "显示所有支持的命令，格式help"},
     {"chat", "一对一聊天，格式chat:friendid:message"},
     {"addfriend", "添加好友，格式addfriend:friendid"},
@@ -22,18 +21,22 @@ ChatSession::ChatSession(std::string ip, short port)
 {
     tcpClient_.SetSessionHandle(
         std::bind(&ChatSession::MessageCallbackHandle, this, _1, _2));
-    
+
     // 注册事件回调
-    commandHandlerMap["help"] = std::bind(&ChatSession::help, this, _1);
-    commandHandlerMap["chat"] = std::bind(&ChatSession::chat, this, _1);
-    commandHandlerMap["addfriend"] = std::bind(&ChatSession::AddFriend, this, _1);
-    commandHandlerMap["creategroup"] = std::bind(&ChatSession::CreateGroup, this, _1);
-    commandHandlerMap["addgroup"] = std::bind(&ChatSession::AddGroup, this, _1);
-    commandHandlerMap["groupchat"] = std::bind(&ChatSession::GroupChat, this, _1);
-    commandHandlerMap["loginout"] = std::bind(&ChatSession::Logout, this, _1);
-    
+    commandHandlerMap_["help"] = std::bind(&ChatSession::help, this, _1);
+    commandHandlerMap_["chat"] = std::bind(&ChatSession::chat, this, _1);
+    commandHandlerMap_["addfriend"] =
+        std::bind(&ChatSession::AddFriend, this, _1);
+    commandHandlerMap_["creategroup"] =
+        std::bind(&ChatSession::CreateGroup, this, _1);
+    commandHandlerMap_["addgroup"] =
+        std::bind(&ChatSession::AddGroup, this, _1);
+    commandHandlerMap_["groupchat"] =
+        std::bind(&ChatSession::GroupChat, this, _1);
+    commandHandlerMap_["loginout"] = std::bind(&ChatSession::Logout, this, _1);
+
     // 保证后续登录以及注册业务的同步进行
-    mtx.lock();
+    mtx_.lock();
 }
 
 void ChatSession::MessageCallbackHandle(const muduo::net::TcpConnectionPtr &ptr,
@@ -44,16 +47,17 @@ void ChatSession::MessageCallbackHandle(const muduo::net::TcpConnectionPtr &ptr,
     int msgtype = js["msgType"].get<int>();
     if (EnMsgType::ONE_CHAT_MSG == msgtype)
     {
-        cout << js["time"].get<string>() << " [" << js["id"] << "]"
-             << js["name"].get<string>() << " said: " << js["msg"].get<string>()
-             << endl;
+        std::cout << js["time"].get<std::string>() << " [" << js["id"] << "]"
+                  << js["name"].get<std::string>()
+                  << " said: " << js["msg"].get<std::string>() << std::endl;
     }
 
     if (EnMsgType::GROUP_CHAT_MSG == msgtype)
     {
-        cout << "群消息[" << js["groupid"] << "]:" << js["time"].get<string>()
-             << " [" << js["id"] << "]" << js["name"].get<string>()
-             << " said: " << js["msg"].get<string>() << endl;
+        std::cout << "群消息[" << js["groupid"]
+                  << "]:" << js["time"].get<std::string>() << " [" << js["id"]
+                  << "]" << js["name"].get<std::string>()
+                  << " said: " << js["msg"].get<std::string>() << std::endl;
     }
 
     if (LOGIN_MSG_ACK == msgtype)
@@ -89,7 +93,7 @@ void ChatSession::Login(int ID, std::string password)
 
     tcpClient_.send(js);
     // 加锁保证登录响应逻辑处理完毕后执行
-    mtx.lock();
+    mtx_.lock();
     if (isLoginSuccess_)
     {
         isMainMenuRunning_ = true;
@@ -116,7 +120,7 @@ void ChatSession::registerUser(std::string userName, std::string password)
 
     tcpClient_.send(js);
     // 加锁保证注册响应逻辑处理完毕后执行
-    mtx.lock();
+    mtx_.lock();
 }
 
 void ChatSession::doRegResponse(json &responsejs)
@@ -130,7 +134,7 @@ void ChatSession::doRegResponse(json &responsejs)
         std::cout << "name register success, userid is " << responsejs["id"]
                   << ", do not forget it!" << std::endl;
     }
-    mtx.unlock();
+    mtx_.unlock();
 }
 
 // 处理登录的响应逻辑
@@ -138,7 +142,7 @@ void ChatSession::doLoginResponse(json &responsejs)
 {
     if (200 != responsejs["code"].get<int>()) // 登录失败
     {
-        cout << responsejs["errmsg"] << endl;
+        std::cout << responsejs["errmsg"] << std::endl;
         isLoginSuccess_ = false;
     }
     else // 登录成功
@@ -153,8 +157,8 @@ void ChatSession::doLoginResponse(json &responsejs)
             // 初始化
             currentUserFriendList_.clear();
 
-            vector<string> vec = responsejs["friends"];
-            for (string &str : vec)
+            std::vector<std::string> vec = responsejs["friends"];
+            for (std::string &str : vec)
             {
                 json js = json::parse(str);
                 User user;
@@ -171,8 +175,8 @@ void ChatSession::doLoginResponse(json &responsejs)
             // 初始化
             currentUserGroupList_.clear();
 
-            vector<string> vec1 = responsejs["groups"];
-            for (string &groupstr : vec1)
+            std::vector<std::string> vec1 = responsejs["groups"];
+            for (std::string &groupstr : vec1)
             {
                 json grpjs = json::parse(groupstr);
                 Group group;
@@ -180,8 +184,8 @@ void ChatSession::doLoginResponse(json &responsejs)
                 group.SetName(grpjs["name"]);
                 group.SetDesc(grpjs["desc"]);
 
-                vector<string> vec2 = grpjs["users"];
-                for (string &userstr : vec2)
+                std::vector<std::string> vec2 = grpjs["users"];
+                for (std::string &userstr : vec2)
                 {
                     GroupUser user;
                     json js = json::parse(userstr);
@@ -202,65 +206,78 @@ void ChatSession::doLoginResponse(json &responsejs)
         // 显示当前用户的离线消息  个人聊天信息或者群组消息
         if (responsejs.contains("offlinemessage"))
         {
-            vector<string> vec = responsejs["offlinemessage"];
-            for (string &str : vec)
+            std::cout << "----------------------历史消息---------------------"
+                      << std::endl;
+            std::vector<std::string> vec = responsejs["offlinemessage"];
+            for (std::string &str : vec)
             {
                 json js = json::parse(str);
                 // time + [id] + name + " said: " + xxx
                 if (ONE_CHAT_MSG == js["msgType"].get<int>())
                 {
-                    cout << js["time"].get<string>() << " [" << js["id"] << "]"
-                         << js["name"].get<string>()
-                         << " said: " << js["msg"].get<string>() << endl;
+                    std::cout << js["time"].get<std::string>() << " ["
+                              << js["id"] << "]"
+                              << js["name"].get<std::string>()
+                              << " said: " << js["msg"].get<std::string>()
+                              << std::endl;
                 }
                 else
                 {
-                    cout << "群消息[" << js["groupid"]
-                         << "]:" << js["time"].get<string>() << " [" << js["id"]
-                         << "]" << js["name"].get<string>()
-                         << " said: " << js["msg"].get<string>() << endl;
+                    std::cout << "群消息[" << js["groupid"]
+                              << "]:" << js["time"].get<std::string>() << " ["
+                              << js["id"] << "]"
+                              << js["name"].get<std::string>()
+                              << " said: " << js["msg"].get<std::string>()
+                              << std::endl;
                 }
             }
+            std::cout << "---------------------------------------------------"
+                      << std::endl;
         }
 
         isLoginSuccess_ = true;
     }
-    mtx.unlock();
+    mtx_.unlock();
 }
 
 // 显示当前登录成功用户的基本信息
 void ChatSession::ShowCurrentUserData()
 {
-    cout << "======================login user======================" << endl;
-    cout << "current login user => id:" << currentUser_.GetId()
-         << " name:" << currentUser_.GetName() << endl;
-    cout << "----------------------friend list---------------------" << endl;
+    std::cout << "======================login user======================"
+              << std::endl;
+    std::cout << "current login user => id:" << currentUser_.GetId()
+              << " name:" << currentUser_.GetName() << std::endl;
+    std::cout << "----------------------friend list---------------------"
+              << std::endl;
     if (!currentUserFriendList_.empty())
     {
         for (User &user : currentUserFriendList_)
         {
-            cout << user.GetId() << " " << user.GetName() << " "
-                 << user.GetState() << endl;
+            std::cout << user.GetId() << " " << user.GetName() << " "
+                      << user.GetState() << std::endl;
         }
     }
-    cout << "----------------------group list----------------------" << endl;
+    std::cout << "----------------------group list----------------------"
+              << std::endl;
     if (!currentUserGroupList_.empty())
     {
         for (Group &group : currentUserGroupList_)
         {
-            cout << group.GetId() << " " << group.GetName() << " "
-                 << group.GetDesc() << endl;
+            std::cout << group.GetId() << " " << group.GetName() << " "
+                      << group.GetDesc() << std::endl;
             for (GroupUser &user : group.GetUsers())
             {
-                cout << user.GetId() << " " << user.GetName() << " "
-                     << user.GetState() << " " << user.GetRole() << endl;
+                std::cout << user.GetId() << " " << user.GetName() << " "
+                          << user.GetState() << " " << user.GetRole()
+                          << std::endl;
             }
         }
     }
-    cout << "======================================================" << endl;
+    std::cout << "======================================================"
+              << std::endl;
 }
 
-void ChatSession::AddFriend(string friendid)
+void ChatSession::AddFriend(std::string friendid)
 {
     int _friendid = atoi(friendid.c_str());
     json js;
@@ -271,17 +288,17 @@ void ChatSession::AddFriend(string friendid)
     tcpClient_.send(js);
 }
 
-void ChatSession::CreateGroup(string info)
+void ChatSession::CreateGroup(std::string info)
 {
     int idx = info.find(":");
     if (-1 == idx)
     {
-        cerr << "创建组命令无效!" << endl;
+        std::cerr << "创建组命令无效!" << std::endl;
         return;
     }
 
-    string groupname = info.substr(0, idx);
-    string groupdesc = info.substr(idx + 1, info.size() - idx);
+    std::string groupname = info.substr(0, idx);
+    std::string groupdesc = info.substr(idx + 1, info.size() - idx);
 
     json js;
     js["msgType"] = CREATE_GROUP_MSG;
@@ -292,7 +309,7 @@ void ChatSession::CreateGroup(string info)
     tcpClient_.send(js);
 }
 
-void ChatSession::AddGroup(string info)
+void ChatSession::AddGroup(std::string info)
 {
     int groupid = atoi(info.c_str());
     json js;
@@ -302,17 +319,17 @@ void ChatSession::AddGroup(string info)
     tcpClient_.send(js);
 }
 
-void ChatSession::GroupChat(string msg)
+void ChatSession::GroupChat(std::string msg)
 {
     int idx = msg.find(":");
     if (-1 == idx)
     {
-        cerr << "groupchat command invalid!" << endl;
+        std::cerr << "groupchat command invalid!" << std::endl;
         return;
     }
 
     int groupid = atoi(msg.substr(0, idx).c_str());
-    string message = msg.substr(idx + 1, msg.size() - idx);
+    std::string message = msg.substr(idx + 1, msg.size() - idx);
 
     json js;
     js["msgType"] = GROUP_CHAT_MSG;
@@ -325,17 +342,17 @@ void ChatSession::GroupChat(string msg)
     tcpClient_.send(js);
 }
 
-void ChatSession::chat(string msg)
+void ChatSession::chat(std::string msg)
 {
     int idx = msg.find(":"); // friendid:message
     if (-1 == idx)
     {
-        cerr << "chat command invalid!" << endl;
+        std::cerr << "chat command invalid!" << std::endl;
         return;
     }
 
     int friendid = atoi(msg.substr(0, idx).c_str());
-    string message = msg.substr(idx + 1, msg.size() - idx);
+    std::string message = msg.substr(idx + 1, msg.size() - idx);
 
     json js;
     js["msgType"] = ONE_CHAT_MSG;
@@ -350,7 +367,7 @@ void ChatSession::chat(string msg)
 
 void ChatSession::help(std::string)
 {
-    cout << "show command list >>> " << endl;
+    std::cout << "show command list >>> " << std::endl;
     std::cout << "help"
                  "显示所有支持的命令，格式help\n"
                  "chat"
@@ -376,7 +393,7 @@ void ChatSession::mainMenu()
     {
         std::string commandbuf;
         std::cin >> commandbuf;
-        string command; // 存储命令
+        std::string command; // 存储命令
         int idx = commandbuf.find(":");
         if (-1 == idx)
         {
@@ -386,11 +403,11 @@ void ChatSession::mainMenu()
         {
             command = commandbuf.substr(0, idx);
         }
-        auto it = commandHandlerMap.find(command);
+        auto it = commandHandlerMap_.find(command);
 
-        if (it == commandHandlerMap.end())
+        if (it == commandHandlerMap_.end())
         {
-            cerr << "invalid input command!" << endl;
+            std::cerr << "invalid input command!" << std::endl;
             continue;
         }
 

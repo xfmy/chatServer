@@ -10,8 +10,6 @@
 #include "package.h"
 #include "muduo/net/TcpConnection.h"
 
-// using namespace muduo;
-// using namespace muduo::net;
 
 class NetworkService
 {
@@ -32,7 +30,6 @@ public:
 private:
     void send(const std::string& msg) const
     {
-        // TODO 在此处添加数据包处理代码
         std::string sendMsg = package::encapsulation(msg);
         ptr->send(sendMsg);
     }

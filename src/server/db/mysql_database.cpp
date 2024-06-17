@@ -1,7 +1,5 @@
 #include <muduo/base/Logging.h>
 #include "mysql_database.h"
-//#include <sstream>
-
 // MysqlDataBase* MysqlDataBase::instance = nullptr;
 
 MysqlDataBase::MysqlDataBase() {}

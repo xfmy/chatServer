@@ -1,14 +1,13 @@
 #include <iostream>
-#include <nlohmann/json.hpp>
 #include "chat_session.h"
-//#include "msgType.h"
-using json = nlohmann::json;
+
 
 int main(int argc, char **argv)
 {
     if (argc < 3)
     {
-        cerr << "command invalid! example: ./ChatClient 127.0.0.1 6000" << endl;
+        std::cerr << "command invalid! example: ./ChatClient 127.0.0.1 6000"
+                  << std::endl;
         exit(-1);
     }
 
@@ -17,17 +16,17 @@ int main(int argc, char **argv)
     ChatSession session(argv[1], port);
 
     // main线程用于接收用户输入，负责发送数据
-    while(true)
+    while (true)
     {
         // 显示首页面菜单 登录、注册、退出
-        cout << "========================" << endl;
-        cout << "1. login" << endl;
-        cout << "2. register" << endl;
-        cout << "3. quit" << endl;
-        cout << "========================" << endl;
-        cout << "choice:";
+        std::cout << "========================" << std::endl;
+        std::cout << "1. login" << std::endl;
+        std::cout << "2. register" << std::endl;
+        std::cout << "3. quit" << std::endl;
+        std::cout << "========================" << std::endl;
+        std::cout << "choice:";
         int choice = 0;
-        cin >> choice;
+        std::cin >> choice;
 
         switch (choice)
         {
@@ -37,7 +36,7 @@ int main(int argc, char **argv)
                 std::string password;
                 std::cout << "userId:";
                 std::cin >> id;
-                cout << "userpassword:";
+                std::cout << "userpassword:";
                 std::cin >> password;
 
                 session.Login(id, password);
@@ -49,18 +48,16 @@ int main(int argc, char **argv)
                 std::string password;
                 std::cout << "username:";
                 std::cin >> userName;
-                cout << "userpassword:";
+                std::cout << "userpassword:";
                 std::cin >> password;
 
-                session.registerUser(userName,password);
+                session.registerUser(userName, password);
             }
             break;
             case 3: // quit业务
                 exit(0);
                 break;
-            default: 
-                cerr << "invalid input!" << endl; 
-                break;
+            default: std::cerr << "invalid input!" << std::endl; break;
         }
     }
     return 0;
